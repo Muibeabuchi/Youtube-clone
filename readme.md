@@ -1,0 +1,1 @@
+A Youtube clone built with React.js ,material ui v5,reactquery and React Player. All data related to this website was pulled from an API provided by rapid Api.THis website is basicly a pulling data from that api and displaying it on the frontend. Video player is also available thanks to React player. Requests to the api max out at 500 per day due to it being a free tier package.

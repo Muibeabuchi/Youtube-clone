@@ -15,7 +15,7 @@ export default function VideoCard({
     snippet,
   },
 }) {
-  console.log(snippet, videoId);
+  // console.log(snippet, videoId);
   return (
     <Card
       sx={{
