@@ -15,7 +15,7 @@ export default function Feed() {
       enabled: false,
     })
   );
-  console.log(videos);
+  // console.log(videos);
 
   return (
     <Stack sx={{ flexDirection: { xs: "column", md: "row" } }}>
@@ -38,7 +38,14 @@ export default function Feed() {
           Copyright 2023 NerdkidChiki{" "}
         </Typography>
       </Box>
-      <Box sx={{ flex: 2, height: "90vh", overflowY: "auto" }}>
+      <Box
+        sx={{
+          flex: 2,
+          height: "90vh",
+          overflowY: "auto",
+          ml: { xs: "15px", md: "10px" },
+        }}
+      >
         <Typography
           variant="h4"
           fontWeight="bold"

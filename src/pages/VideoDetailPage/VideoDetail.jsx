@@ -23,12 +23,13 @@ export default function VideoDetail() {
     () => fetchFromApi(`search?part=snippet&relatedToVideoId=${id}&type='video`)
   );
 
-  const {
-    snippet: { title, channelId, chanelTitle },
-    statistics: { viewCount, likeCount },
-  } = videodetail;
-
   if (!videodetail) return "Loading...";
+  // console.log(videodetail?.snippet);
+
+  // const {
+  //   snippet: { title, channelId },
+  //   statistics: { viewCount, likeCount },
+  // } = videodetail;
 
   return (
     <Box minHeight="95vh">
@@ -41,7 +42,7 @@ export default function VideoDetail() {
               controls
             />
             <Typography variant="h5" fontWeight="bold" color="#fff" p={2}>
-              {title}
+              {videodetail?.snippet?.title}
             </Typography>
             <Stack
               direction="row"
@@ -50,9 +51,9 @@ export default function VideoDetail() {
               py={1}
               px={2}
             >
-              <Link to={`/channel/${channelId}`}>
+              <Link to={`/channel/${videodetail?.snippet?.channelId}`}>
                 <Typography variant={{ sm: "subtitle", md: "h6" }} color="#fff">
-                  {channelTitle}
+                  {videodetail?.snippet?.channelTitle}
                   <CheckCircle
                     sx={{ fontSize: "12px", color: "gray", ml: "5px" }}
                   />
@@ -60,16 +61,22 @@ export default function VideoDetail() {
               </Link>
               <Stack direction="row">
                 <Typography variant="body1" sx={{ opacity: 0.7 }}>
-                  {parseInt(viewCount).toLocaleString()} views
+                  {parseInt(
+                    videodetail?.statistics?.viewCount
+                  ).toLocaleString()}{" "}
+                  views
                 </Typography>
                 <Typography variant="body1" sx={{ opacity: 0.7 }}>
-                  {parseInt(likeCount).toLocaleString()} Likes
+                  {parseInt(
+                    videodetail?.statistics?.likeCount
+                  ).toLocaleString()}{" "}
+                  Likes
                 </Typography>
               </Stack>
             </Stack>
           </Box>
         </Box>
-        <Box justifyContent="center" py={{ md: 1, xs: 5 }} px={2}>
+        <Box py={{ md: 1, xs: 5 }} px={2}>
           <Videos videos={relatedVideos} direction="column" />
         </Box>
       </Stack>
