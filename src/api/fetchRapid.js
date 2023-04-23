@@ -6,7 +6,7 @@ const options = {
     maxResults: '50'
   },
   headers: {
-    'X-RapidAPI-Key': import.meta.env.VITE_RAPID_API_KEY,
+    'X-RapidAPI-Key':'07611baa4cmsh15ebb59b25072ffp179c96jsn169d0fbc99c5',
     'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com'
   }
 };
