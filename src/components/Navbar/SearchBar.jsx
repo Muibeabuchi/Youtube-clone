@@ -13,6 +13,12 @@ export default function SearchBar() {
       setSearchTerm("");
     }
   };
+  function handleSearchButtonClick() {
+    if (searchTerm) {
+      navigate(`/search/${searchTerm}`);
+      setSearchTerm("");
+    }
+  }
   return (
     <Paper
       component="form"
@@ -31,7 +37,7 @@ export default function SearchBar() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <IconButton type="button" sx={{ p: "10px", color: "red" }}>
-        <Search />
+        <Search onClick={handleSearchButtonClick} />
       </IconButton>
     </Paper>
   );
