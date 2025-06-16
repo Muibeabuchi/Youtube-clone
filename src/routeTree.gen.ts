@@ -11,12 +11,17 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WatchRouteImport } from './routes/watch'
 import { Route as IndexRouteImport } from './routes/index'
 import { ServerRoute as ApiUsersServerRouteImport } from './routes/api.users'
-import { ServerRoute as ApiUsersIdServerRouteImport } from './routes/api/users.$id'
 
 const rootServerRouteImport = createServerRootRoute()
 
+const WatchRoute = WatchRouteImport.update({
+  id: '/watch',
+  path: '/watch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -27,60 +32,63 @@ const ApiUsersServerRoute = ApiUsersServerRouteImport.update({
   path: '/api/users',
   getParentRoute: () => rootServerRouteImport,
 } as any)
-const ApiUsersIdServerRoute = ApiUsersIdServerRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiUsersServerRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/watch': typeof WatchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/watch': typeof WatchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/watch': typeof WatchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/watch'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/watch'
+  id: '__root__' | '/' | '/watch'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  WatchRoute: typeof WatchRoute
 }
 export interface FileServerRoutesByFullPath {
-  '/api/users': typeof ApiUsersServerRouteWithChildren
-  '/api/users/$id': typeof ApiUsersIdServerRoute
+  '/api/users': typeof ApiUsersServerRoute
 }
 export interface FileServerRoutesByTo {
-  '/api/users': typeof ApiUsersServerRouteWithChildren
-  '/api/users/$id': typeof ApiUsersIdServerRoute
+  '/api/users': typeof ApiUsersServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
-  '/api/users': typeof ApiUsersServerRouteWithChildren
-  '/api/users/$id': typeof ApiUsersIdServerRoute
+  '/api/users': typeof ApiUsersServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/users' | '/api/users/$id'
+  fullPaths: '/api/users'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/users' | '/api/users/$id'
-  id: '__root__' | '/api/users' | '/api/users/$id'
+  to: '/api/users'
+  id: '__root__' | '/api/users'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
-  ApiUsersServerRoute: typeof ApiUsersServerRouteWithChildren
+  ApiUsersServerRoute: typeof ApiUsersServerRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/watch': {
+      id: '/watch'
+      path: '/watch'
+      fullPath: '/watch'
+      preLoaderRoute: typeof WatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -99,36 +107,18 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof ApiUsersServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
-    '/api/users/$id': {
-      id: '/api/users/$id'
-      path: '/$id'
-      fullPath: '/api/users/$id'
-      preLoaderRoute: typeof ApiUsersIdServerRouteImport
-      parentRoute: typeof ApiUsersServerRoute
-    }
   }
 }
 
-interface ApiUsersServerRouteChildren {
-  ApiUsersIdServerRoute: typeof ApiUsersIdServerRoute
-}
-
-const ApiUsersServerRouteChildren: ApiUsersServerRouteChildren = {
-  ApiUsersIdServerRoute: ApiUsersIdServerRoute,
-}
-
-const ApiUsersServerRouteWithChildren = ApiUsersServerRoute._addFileChildren(
-  ApiUsersServerRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  WatchRoute: WatchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
-  ApiUsersServerRoute: ApiUsersServerRouteWithChildren,
+  ApiUsersServerRoute: ApiUsersServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)

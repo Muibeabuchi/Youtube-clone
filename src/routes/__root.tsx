@@ -15,6 +15,8 @@ import { NotFound } from "@/components/NotFound";
 import appCss from "@/styles/app.css?url";
 import { seo } from "@/utils/seo";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Header } from "@/components/header";
+import { CategoriesSection } from "@/components/categories-section";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -88,7 +90,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           enableSystem={false}
           disableTransitionOnChange={false}
         >
-          {children}
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <CategoriesSection />
+            <main className="flex-1 pt-32 pb-8">
+              <div className="pt-6">{children}</div>
+            </main>
+          </div>
         </ThemeProvider>
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />

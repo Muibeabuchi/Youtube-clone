@@ -1,12 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
-export const Route = createFileRoute('/')({
-  component: Home,
-})
+import { VideoGrid } from "@/components/video-grid";
+import { dummyVideos } from "@/data/youtube-data";
+import { createFileRoute } from "@tanstack/react-router";
 
-function Home() {
+export const Route = createFileRoute("/")({
+  component: Home,
+});
+
+export default function Home() {
   return (
-    <div className="p-2">
-      <h3>Welcome Home!!!</h3>
+    <div className="w-full">
+      <VideoGrid videos={dummyVideos.slice(0, 24)} />
     </div>
-  )
+  );
 }
