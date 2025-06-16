@@ -12,7 +12,7 @@ interface VideoCardProps {
 export function VideoCard({
   video,
   layout = "grid",
-  showChannel = false,
+  showChannel = true,
 }: VideoCardProps) {
   const channel = dummyChannels.find((c) => c.id === video.channelId);
 
@@ -33,7 +33,7 @@ export function VideoCard({
           <h3 className="font-medium text-sm line-clamp-2">{video.title}</h3>
           {showChannel && (
             <p className="text-xs text-muted-foreground mt-1">
-              {channel?.name}
+              {video.channelName}
             </p>
           )}
           <p className="text-xs text-muted-foreground mt-1">
@@ -59,8 +59,8 @@ export function VideoCard({
       <div className="flex gap-3 mt-3">
         <div className="flex-shrink-0">
           <img
-            src={channel?.avatar || "/placeholder.svg"}
-            alt={channel?.name || "Channel"}
+            src={video.channelImageUrl || "/placeholder.svg"}
+            alt={video.channelName || "Channel"}
             width={36}
             height={36}
             className="rounded-full"
@@ -68,7 +68,9 @@ export function VideoCard({
         </div>
         <div>
           <h3 className="font-medium text-sm line-clamp-2">{video.title}</h3>
-          <p className="text-xs text-muted-foreground mt-1">{channel?.name}</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {video.channelName}
+          </p>
           <p className="text-xs text-muted-foreground">
             {video.views} views • {video.uploadDate}
           </p>
