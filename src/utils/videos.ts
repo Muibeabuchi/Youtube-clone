@@ -12,7 +12,6 @@ const PARAM_KEY = import.meta.env.VITE_PARAM_KEY;
 
 const options = {
   params: {
-    maxResults: "5",
     key: PARAM_KEY,
   },
   headers: {
@@ -27,20 +26,21 @@ const videosOptions = {
   ...options,
   params: {
     ...options.params,
+    maxResults: "5",
     part: "snippet,statistics,contentDetails",
     chart: "mostPopular",
   },
 };
-const videoOptions = (videoId: string) => ({
-  method: "GET",
-  url: `${BASE_URL}/videos`,
-  ...options,
-  params: {
-    ...options.params,
-    part: "snippet,statistics",
-    chart: "mostPopular",
-  },
-});
+// const videoOptions = (videoId: string) => ({
+//   method: "GET",
+//   url: `${BASE_URL}/videos`,
+//   ...options,
+//   params: {
+//     ...options.params,
+//     part: "snippet,statistics",
+//     chart: "mostPopular",
+//   },
+// });
 
 const channelImageUrlOptions = (channelId: string) => ({
   method: "GET",

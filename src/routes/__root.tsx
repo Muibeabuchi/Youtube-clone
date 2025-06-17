@@ -93,8 +93,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <div className="min-h-screen flex flex-col">
             <Header />
             <CategoriesSection />
-            <main className="flex-1 pt-32 pb-8">
-              <div className="pt-6">{children}</div>
+            <main className="flex-1 pt-20 pb-8">
+              <div className="pt-2">{children}</div>
             </main>
           </div>
         </ThemeProvider>
