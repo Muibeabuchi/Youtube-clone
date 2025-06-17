@@ -31,6 +31,8 @@ const videosOptions = {
     chart: "mostPopular",
   },
 };
+
+const watchVideoOptions = {};
 // const videoOptions = (videoId: string) => ({
 //   method: "GET",
 //   url: `${BASE_URL}/videos`,
@@ -89,4 +91,5 @@ export const videosQueryOptions = () =>
   queryOptions({
     queryKey: ["videos"],
     queryFn: fetchVideos,
+    staleTime: 1000 * 60 * 60,
   });

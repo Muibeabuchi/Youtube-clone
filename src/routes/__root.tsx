@@ -5,6 +5,9 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  rootRouteId,
+  useLocation,
+  useMatch,
 } from "@tanstack/react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
@@ -17,6 +20,7 @@ import { seo } from "@/utils/seo";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { CategoriesSection } from "@/components/categories-section";
+import { cn } from "@/lib/utils";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -78,6 +82,13 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const location = useLocation({
+    select: (l) => l.pathname,
+  });
+
+  const isHomePage = location === "/";
+
+  console.log({ location });
   return (
     <html>
       <head>
@@ -92,8 +103,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         >
           <div className="min-h-screen flex flex-col">
             <Header />
-            <CategoriesSection />
-            <main className="flex-1 pt-20 pb-8">
+            {isHomePage && <CategoriesSection />}
+            <main
+              className={cn("flex-1 pt-20 pb-8", {
+                "pt-4": !isHomePage,
+              })}
+            >
               <div className="pt-2">{children}</div>
             </main>
           </div>

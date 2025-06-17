@@ -14,11 +14,17 @@ export function VideoCard({
   layout = "grid",
   showChannel = true,
 }: VideoCardProps) {
-  const channel = dummyChannels.find((c) => c.id === video.channelId);
+  // const channel = dummyChannels.find((c) => c.id === video.channelId);
 
   if (layout === "horizontal") {
     return (
-      <div className="flex gap-2">
+      <Link
+        to="/watch"
+        search={{
+          v: video.channelId,
+        }}
+        className="flex gap-2"
+      >
         <div className="relative flex-shrink-0 w-40 aspect-video rounded-lg overflow-hidden">
           <img
             src={video.thumbnail || "/placeholder.svg"}
@@ -40,12 +46,18 @@ export function VideoCard({
             {video.views} views • {video.uploadDate}
           </p>
         </div>
-      </div>
+      </Link>
     );
   }
 
   return (
-    <div className="flex flex-col">
+    <Link
+      to="/watch"
+      search={{
+        v: video.id,
+      }}
+      className="flex flex-col"
+    >
       <div className="relative aspect-video rounded-xl overflow-hidden">
         <img
           src={video.thumbnail || "/placeholder.svg"}
@@ -57,7 +69,13 @@ export function VideoCard({
         </div>
       </div>
       <div className="flex gap-3 mt-3">
-        <div className="flex-shrink-0">
+        <Link
+          to={`/channel/$channelId`}
+          params={{
+            channelId: video.channelId,
+          }}
+          className="flex-shrink-0"
+        >
           <img
             src={video.channelImageUrl || "/placeholder.svg"}
             alt={video.channelName || "Channel"}
@@ -65,17 +83,23 @@ export function VideoCard({
             height={36}
             className="rounded-full"
           />
-        </div>
+        </Link>
         <div>
           <h3 className="font-medium text-sm line-clamp-2">{video.title}</h3>
-          <p className="text-xs text-muted-foreground mt-1">
+          <Link
+            to="/channel/$channelId"
+            params={{
+              channelId: video.channelId,
+            }}
+            className="text-xs text-muted-foreground mt-1"
+          >
             {video.channelName}
-          </p>
+          </Link>
           <p className="text-xs text-muted-foreground">
             {video.views} views • {video.uploadDate}
           </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
