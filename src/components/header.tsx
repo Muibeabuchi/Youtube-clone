@@ -23,9 +23,9 @@ export function Header() {
       <div className=" mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
-            <span className="text-white font-bold text-sm">YT</span>
+            <span className="text-white font-bold text-sm">CT</span>
           </div>
-          <span className="font-bold text-xl">YouTube</span>
+          <span className="font-bold text-xl">ChikiTube</span>
         </Link>
 
         <div className="flex-1 max-w-2xl mx-8">

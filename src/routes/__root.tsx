@@ -88,7 +88,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
   const isHomePage = location === "/";
 
-  console.log({ location });
   return (
     <html>
       <head>
