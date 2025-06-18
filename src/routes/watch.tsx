@@ -1,7 +1,7 @@
 import { WatchPageSkeleton } from "@/components/loading/watch-page-skeleton";
 import { singleVideoQueryOptions } from "@/utils/videos";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Suspense, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -50,6 +50,8 @@ function RouteComponent() {
   );
   const videoItems = singleVideo.items[0];
   const videoChannelImageUrl = singleVideo.channelImageUrl;
+  const videoChannelSubCount = singleVideo.channelSubCount;
+
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   return (
@@ -132,22 +134,37 @@ function RouteComponent() {
           {/* Desktop Layout */}
           <div className="hidden sm:flex flex-col lg:flex-row lg:items-center justify-between mt-4 gap-4">
             <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage
-                  src={videoChannelImageUrl}
-                  alt={videoItems.snippet.channelTitle}
-                />
-                <AvatarFallback>
-                  {videoItems.snippet.channelTitle}
-                </AvatarFallback>
-              </Avatar>
+              <Link
+                to="/channel/$channelId"
+                params={{
+                  channelId: videoItems.snippet.channelId,
+                }}
+              >
+                <Avatar className="h-10 w-10">
+                  <AvatarImage
+                    src={videoChannelImageUrl}
+                    alt={videoItems.snippet.channelTitle}
+                  />
+                  <AvatarFallback>
+                    {videoItems.snippet.channelTitle}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
               <div>
-                <h3 className="font-medium text-sm">
-                  {videoItems.snippet.channelTitle}
-                </h3>
-                {/* <p className="text-xs text-muted-foreground">
-                  {channel.subscribers} subscribers
-                </p> */}
+                <Link
+                  to="/channel/$channelId"
+                  params={{
+                    channelId: videoItems.snippet.channelId,
+                  }}
+                >
+                  <h3 className="font-medium text-sm">
+                    {videoItems.snippet.channelTitle}
+                  </h3>
+                </Link>
+                <p className="text-xs text-muted-foreground">
+                  {formatYouTubeViewCount(Number(videoChannelSubCount))}{" "}
+                  subscribers
+                </p>
               </div>
               <Button
                 variant="secondary"

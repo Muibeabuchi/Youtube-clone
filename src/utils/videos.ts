@@ -49,7 +49,7 @@ const channelImageUrlOptions = (channelIds: string) => ({
   url: `${BASE_URL}/channels`,
   params: {
     ...options.params.key,
-    part: "snippet,id",
+    part: "snippet,id,statistics",
     id: channelIds,
   },
   headers: options.headers,
@@ -111,17 +111,22 @@ export const fetchSingleVideo = createServerFn({ method: "GET" })
       });
 
     // console.log({ video });
-    const videoChannelImageUrl = (
+    const videoChannel = (
       await axios.request<ChannelType>(
         channelImageUrlOptions(video.items[0].snippet.channelId)
       )
-    ).data.items[0].snippet.thumbnails.high.url;
+    ).data.items[0];
+
+    const channelSubCount = videoChannel.statistics.subscriberCount;
+
+    const videoChannelImageUrl = videoChannel.snippet.thumbnails.high.url;
 
     // console.log(videoChannelImageUrl);
 
     return {
       ...video,
       channelImageUrl: videoChannelImageUrl,
+      channelSubCount,
     };
   });
 

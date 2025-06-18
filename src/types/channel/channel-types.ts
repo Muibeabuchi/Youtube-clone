@@ -15,6 +15,21 @@ export interface Item {
   etag: string;
   id: string;
   snippet: Snippet;
+  statistics: Statistics;
+}
+
+// export interface Statistics {
+//   viewCount: string;
+//   likeCount?: string;
+//   favoriteCount: string;
+//   commentCount: string;
+// }
+
+export interface Statistics {
+  viewCount: string;
+  subscriberCount: string;
+  hiddenSubscriberCount: boolean;
+  videoCount: string;
 }
 
 export interface Snippet {

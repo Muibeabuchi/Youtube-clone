@@ -13,8 +13,15 @@ export interface SingleVideoItem {
   status: Status;
   statistics: Statistics;
   player: Player;
+  // statistics:Statistics
 }
 
+// export interface Statistics {
+//   viewCount: string;
+//   likeCount?: string;
+//   favoriteCount: string;
+//   commentCount: string;
+// }
 export interface Snippet {
   publishedAt: string;
   channelId: string;
