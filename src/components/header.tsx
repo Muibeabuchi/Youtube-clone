@@ -28,12 +28,12 @@ export function Header() {
           <span className="font-bold text-xl">ChikiTube</span>
         </Link>
 
-        <div className="flex-1 max-w-2xl mx-8">
+        {/* <div className="flex-1 max-w-2xl mx-8">
           <div className="relative">
             <Input
               type="search"
               placeholder="Search"
-              className="w-full pl-4 pr-12 py-2 rounded-full border-2 focus:border-blue-500"
+              className="w-full pl-4 hidden md:flex pr-12 py-2 rounded-full border-2 focus:border-blue-500"
             />
             <Button
               size="sm"
@@ -42,6 +42,26 @@ export function Header() {
               <Search className="h-4 w-4" />
             </Button>
           </div>
+        </div> */}
+
+        <div className=" flex justify-center w-[200px] md:w-[250px] lg:w-full  max-w-2xl mx-auto">
+          <form onSubmit={() => {}} className="flex w-full ">
+            <Input
+              type="search"
+              placeholder="Search"
+              className="rounded-r-none border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              // value={searchQuery}
+              // onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button
+              type="submit"
+              variant="outline"
+              size="icon"
+              className="rounded-l-none border-l-0"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          </form>
         </div>
 
         <Button
@@ -81,25 +101,25 @@ export function Header() {
     //     </Link>
     //   </div>
 
-    //   <div className=" flex justify-center w-[200px] md:w-[250px] lg:w-full  max-w-2xl mx-auto">
-    //     <form onSubmit={() => {}} className="flex w-full ">
-    //       <Input
-    //         type="search"
-    //         placeholder="Search"
-    //         className="rounded-r-none border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-    //         value={searchQuery}
-    //         onChange={(e) => setSearchQuery(e.target.value)}
-    //       />
-    //       <Button
-    //         type="submit"
-    //         variant="outline"
-    //         size="icon"
-    //         className="rounded-l-none border-l-0"
-    //       >
-    //         <Search className="h-5 w-5" />
-    //       </Button>
-    //     </form>
-    //   </div>
+    // <div className=" flex justify-center w-[200px] md:w-[250px] lg:w-full  max-w-2xl mx-auto">
+    //   <form onSubmit={() => {}} className="flex w-full ">
+    //     <Input
+    //       type="search"
+    //       placeholder="Search"
+    //       className="rounded-r-none border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+    //       value={searchQuery}
+    //       onChange={(e) => setSearchQuery(e.target.value)}
+    //     />
+    //     <Button
+    //       type="submit"
+    //       variant="outline"
+    //       size="icon"
+    //       className="rounded-l-none border-l-0"
+    //     >
+    //       <Search className="h-5 w-5" />
+    //     </Button>
+    //   </form>
+    // </div>
 
     //   <div className="flex items-center">
     //     <ModeToggle />

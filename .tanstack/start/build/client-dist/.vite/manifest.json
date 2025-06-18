@@ -1,0 +1,15 @@
+{
+  "../../../../~start/default-client-entry.tsx": {
+    "file": "assets/main-CYjUOvL7.js",
+    "name": "main",
+    "src": "../../../../~start/default-client-entry.tsx",
+    "isEntry": true,
+    "assets": [
+      "assets/app-qCYpDVIY.css"
+    ]
+  },
+  "C:/Users/HP USER/Desktop/youtube-clone/src/styles/app.css": {
+    "file": "assets/app-qCYpDVIY.css",
+    "src": "C:/Users/HP USER/Desktop/youtube-clone/src/styles/app.css"
+  }
+}

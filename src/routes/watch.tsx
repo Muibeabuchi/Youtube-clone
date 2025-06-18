@@ -49,6 +49,7 @@ function RouteComponent() {
     singleVideoQueryOptions(videoId)
   );
   const videoItems = singleVideo.items[0];
+  const videoChannelImageUrl = singleVideo.channelImageUrl;
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   return (
@@ -77,10 +78,10 @@ function RouteComponent() {
           <div className="flex items-center justify-between mt-3 sm:hidden">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
-                {/* <AvatarImage
-                  // src={videoItems.snippet.|| "/placeholder.svg"}
+                <AvatarImage
+                  src={videoChannelImageUrl}
                   alt={videoItems.snippet.channelTitle}
-                /> */}
+                />
                 <AvatarFallback>
                   {videoItems.snippet.channelTitle.charAt(0)}
                 </AvatarFallback>
@@ -133,8 +134,8 @@ function RouteComponent() {
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
                 <AvatarImage
-                // src={channel.avatar || "/placeholder.svg"}
-                // alt={channel.name}
+                  src={videoChannelImageUrl}
+                  alt={videoItems.snippet.channelTitle}
                 />
                 <AvatarFallback>
                   {videoItems.snippet.channelTitle}
@@ -277,19 +278,6 @@ function RouteComponent() {
       </div>
 
       {/* Related Videos Sidebar */}
-      <div className="xl:w-[360px] flex flex-col gap-3">
-        <div className="xl:hidden">
-          <h2 className="font-semibold text-lg mb-3">Related Videos</h2>
-        </div>
-        {/* {relatedVideos.map((video) => (
-          <VideoCard
-            key={video.id}
-            video={video}
-            layout="horizontal"
-            showChannel={true}
-          />
-        ))} */}
-      </div>
 
       {/* Mobile Comments - Show below related videos
       <div className="xl:hidden">

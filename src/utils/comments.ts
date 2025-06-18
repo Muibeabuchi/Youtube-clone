@@ -1,13 +1,28 @@
 import { createServerFn } from "@tanstack/react-start";
-import { BASE_URL, options } from "./videos";
+// import { options } from "./videos";
 import axios, { AxiosError } from "axios";
 import { VideoCommentsType } from "@/types/comments/video-comment";
 import { queryOptions } from "@tanstack/react-query";
 
+const BASE_URL = "https://youtube-data-api-v33.p.rapidapi.com";
+const API_KEY = import.meta.env.VITE_XRAPIDAPIKEY;
+const PARAM_KEY = import.meta.env.VITE_PARAM_KEY;
+// export const BASE_URL = "https://youtube-data-api-v33.p.rapidapi.com";
+
+const options = {
+  params: {
+    key: PARAM_KEY,
+  },
+  headers: {
+    "x-rapidapi-key": API_KEY,
+    "x-rapidapi-host": "youtube-data-api-v33.p.rapidapi.com",
+  },
+};
+
 const videoCommentsOptions = (videoId: string) => ({
+  ...options,
   method: "GET",
   url: `${BASE_URL}/commentThreads`,
-  ...options,
   params: {
     ...options.params,
     part: "id,snippet,replies",

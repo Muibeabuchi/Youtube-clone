@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { dummyComments } from "@/data/youtube-data";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { commentsOfVideoOptions } from "@/utils/comments";
@@ -19,11 +18,6 @@ export function CommentSection({ videoId }: CommentSectionProps) {
   // const [commentText, setCommentText] = useState("");
   // // ?
   // const [isCommentFocused, setIsCommentFocused] = useState(false);
-
-  // // Filter comments for this video
-  // const videoComments = dummyComments.filter(
-  //   (comment) => comment.videoId === videoId
-  // );
   const commentCount = comments.items[0].snippet.totalReplyCount;
 
   return (

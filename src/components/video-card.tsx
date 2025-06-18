@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 // import Image from "next/image";
 import type { Video } from "@/types";
-import { dummyChannels } from "@/data/youtube-data";
 
 interface VideoCardProps {
   video: Video;
@@ -14,8 +13,6 @@ export function VideoCard({
   layout = "grid",
   showChannel = true,
 }: VideoCardProps) {
-  // const channel = dummyChannels.find((c) => c.id === video.channelId);
-
   if (layout === "horizontal") {
     return (
       <Link

@@ -1,5 +1,4 @@
 import { VideoGrid } from "@/components/video-grid";
-import { dummyVideos } from "@/data/youtube-data";
 import {
   convertISOtoPublishedDate,
   formatYouTubeViewCount,
