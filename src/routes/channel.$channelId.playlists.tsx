@@ -27,7 +27,11 @@ function RouteComponent() {
         <div key={playlist.id} className="group cursor-pointer">
           <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
             <img
-              src={playlist.snippet.thumbnails.high.url}
+              src={
+                playlist.snippet.thumbnails.maxres?.url ||
+                playlist.snippet.thumbnails.high?.url ||
+                playlist.snippet.thumbnails.medium?.url
+              }
               alt={playlist.snippet.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             />
