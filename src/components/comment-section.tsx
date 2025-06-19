@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { commentsOfVideoOptions } from "@/utils/comments";
-import { formatYouTubeViewCount } from "@/lib/utils";
+import { formatYouTubeViewCount, getYouTubePublishedDate } from "@/lib/utils";
 
 interface CommentSectionProps {
   videoId: string;
@@ -77,8 +77,8 @@ export function CommentSection({ videoId }: CommentSectionProps) {
                   {comment.snippet.topLevelComment.snippet.authorDisplayName}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {formatYouTubeViewCount(
-                    Number(comment.snippet.topLevelComment.snippet.publishedAt)
+                  {getYouTubePublishedDate(
+                    comment.snippet.topLevelComment.snippet.publishedAt
                   )}
                 </span>
               </div>

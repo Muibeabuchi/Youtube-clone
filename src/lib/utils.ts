@@ -228,3 +228,46 @@ export function getYouTubePublishedDate(isoString: string): string {
     return publishedDate.toLocaleDateString("en-US", options);
   }
 }
+
+/**
+ * Clamps the length of a string to a specified maximum length.
+ * If the string's original length exceeds the maxLength, it is truncated
+ * and an optional suffix is appended to indicate the truncation.
+ *
+ * @param text The input string to clamp.
+ * @param maxLength The maximum desired length for the string.
+ * @param suffix An optional string to append if truncation occurs (e.g., "...").
+ * Defaults to '...'. If `maxLength` is too small to accommodate
+ * the suffix, the string will simply be truncated without the suffix.
+ * @returns The clamped string.
+ */
+export function clampStringLength(
+  text: string,
+  maxLength: number = 30,
+  suffix: string = "..."
+): string {
+  // Ensure maxLength is a non-negative number.
+  if (maxLength <= 0) {
+    return "";
+  }
+
+  // If the text is already shorter than or equal to the maxLength, return it as is.
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  // Calculate the effective length for the content before the suffix.
+  // We need to ensure there's enough space for the suffix.
+  // If maxLength is smaller than the suffix length, we just truncate without adding the suffix.
+  const effectiveMaxLengthForContent = Math.max(0, maxLength - suffix.length);
+
+  // If even after reserving space for the suffix, the effective content length is zero or less,
+  // it means the suffix itself is longer or equal to the desired max length.
+  // In this case, just truncate the original string to maxLength.
+  if (effectiveMaxLengthForContent <= 0) {
+    return text.substring(0, maxLength);
+  }
+
+  // Truncate the text and append the suffix.
+  return text.substring(0, effectiveMaxLengthForContent) + suffix;
+}

@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WatchRouteImport } from './routes/watch'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ChannelChannelIdRouteImport } from './routes/channel.$channelId'
+import { Route as ChannelChannelIdRouteRouteImport } from './routes/channel.$channelId.route'
+import { Route as ChannelChannelIdIndexRouteImport } from './routes/channel.$channelId.index'
+import { Route as ChannelChannelIdVideosRouteImport } from './routes/channel.$channelId.videos'
+import { Route as ChannelChannelIdPlaylistsRouteImport } from './routes/channel.$channelId.playlists'
 
 const WatchRoute = WatchRouteImport.update({
   id: '/watch',
@@ -23,40 +26,82 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ChannelChannelIdRoute = ChannelChannelIdRouteImport.update({
+const ChannelChannelIdRouteRoute = ChannelChannelIdRouteRouteImport.update({
   id: '/channel/$channelId',
   path: '/channel/$channelId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChannelChannelIdIndexRoute = ChannelChannelIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ChannelChannelIdRouteRoute,
+} as any)
+const ChannelChannelIdVideosRoute = ChannelChannelIdVideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => ChannelChannelIdRouteRoute,
+} as any)
+const ChannelChannelIdPlaylistsRoute =
+  ChannelChannelIdPlaylistsRouteImport.update({
+    id: '/playlists',
+    path: '/playlists',
+    getParentRoute: () => ChannelChannelIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/watch': typeof WatchRoute
-  '/channel/$channelId': typeof ChannelChannelIdRoute
+  '/channel/$channelId': typeof ChannelChannelIdRouteRouteWithChildren
+  '/channel/$channelId/playlists': typeof ChannelChannelIdPlaylistsRoute
+  '/channel/$channelId/videos': typeof ChannelChannelIdVideosRoute
+  '/channel/$channelId/': typeof ChannelChannelIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/watch': typeof WatchRoute
-  '/channel/$channelId': typeof ChannelChannelIdRoute
+  '/channel/$channelId/playlists': typeof ChannelChannelIdPlaylistsRoute
+  '/channel/$channelId/videos': typeof ChannelChannelIdVideosRoute
+  '/channel/$channelId': typeof ChannelChannelIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/watch': typeof WatchRoute
-  '/channel/$channelId': typeof ChannelChannelIdRoute
+  '/channel/$channelId': typeof ChannelChannelIdRouteRouteWithChildren
+  '/channel/$channelId/playlists': typeof ChannelChannelIdPlaylistsRoute
+  '/channel/$channelId/videos': typeof ChannelChannelIdVideosRoute
+  '/channel/$channelId/': typeof ChannelChannelIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/watch' | '/channel/$channelId'
+  fullPaths:
+    | '/'
+    | '/watch'
+    | '/channel/$channelId'
+    | '/channel/$channelId/playlists'
+    | '/channel/$channelId/videos'
+    | '/channel/$channelId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/watch' | '/channel/$channelId'
-  id: '__root__' | '/' | '/watch' | '/channel/$channelId'
+  to:
+    | '/'
+    | '/watch'
+    | '/channel/$channelId/playlists'
+    | '/channel/$channelId/videos'
+    | '/channel/$channelId'
+  id:
+    | '__root__'
+    | '/'
+    | '/watch'
+    | '/channel/$channelId'
+    | '/channel/$channelId/playlists'
+    | '/channel/$channelId/videos'
+    | '/channel/$channelId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   WatchRoute: typeof WatchRoute
-  ChannelChannelIdRoute: typeof ChannelChannelIdRoute
+  ChannelChannelIdRouteRoute: typeof ChannelChannelIdRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -79,16 +124,54 @@ declare module '@tanstack/react-router' {
       id: '/channel/$channelId'
       path: '/channel/$channelId'
       fullPath: '/channel/$channelId'
-      preLoaderRoute: typeof ChannelChannelIdRouteImport
+      preLoaderRoute: typeof ChannelChannelIdRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/channel/$channelId/': {
+      id: '/channel/$channelId/'
+      path: '/'
+      fullPath: '/channel/$channelId/'
+      preLoaderRoute: typeof ChannelChannelIdIndexRouteImport
+      parentRoute: typeof ChannelChannelIdRouteRoute
+    }
+    '/channel/$channelId/videos': {
+      id: '/channel/$channelId/videos'
+      path: '/videos'
+      fullPath: '/channel/$channelId/videos'
+      preLoaderRoute: typeof ChannelChannelIdVideosRouteImport
+      parentRoute: typeof ChannelChannelIdRouteRoute
+    }
+    '/channel/$channelId/playlists': {
+      id: '/channel/$channelId/playlists'
+      path: '/playlists'
+      fullPath: '/channel/$channelId/playlists'
+      preLoaderRoute: typeof ChannelChannelIdPlaylistsRouteImport
+      parentRoute: typeof ChannelChannelIdRouteRoute
     }
   }
 }
 
+interface ChannelChannelIdRouteRouteChildren {
+  ChannelChannelIdPlaylistsRoute: typeof ChannelChannelIdPlaylistsRoute
+  ChannelChannelIdVideosRoute: typeof ChannelChannelIdVideosRoute
+  ChannelChannelIdIndexRoute: typeof ChannelChannelIdIndexRoute
+}
+
+const ChannelChannelIdRouteRouteChildren: ChannelChannelIdRouteRouteChildren = {
+  ChannelChannelIdPlaylistsRoute: ChannelChannelIdPlaylistsRoute,
+  ChannelChannelIdVideosRoute: ChannelChannelIdVideosRoute,
+  ChannelChannelIdIndexRoute: ChannelChannelIdIndexRoute,
+}
+
+const ChannelChannelIdRouteRouteWithChildren =
+  ChannelChannelIdRouteRoute._addFileChildren(
+    ChannelChannelIdRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   WatchRoute: WatchRoute,
-  ChannelChannelIdRoute: ChannelChannelIdRoute,
+  ChannelChannelIdRouteRoute: ChannelChannelIdRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

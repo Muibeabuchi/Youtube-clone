@@ -135,7 +135,7 @@ function RouteComponent() {
           <div className="hidden sm:flex flex-col lg:flex-row lg:items-center justify-between mt-4 gap-4">
             <div className="flex items-center gap-3">
               <Link
-                to="/channel/$channelId"
+                to={`/channel/$channelId`}
                 params={{
                   channelId: videoItems.snippet.channelId,
                 }}
@@ -152,7 +152,7 @@ function RouteComponent() {
               </Link>
               <div>
                 <Link
-                  to="/channel/$channelId"
+                  to={`/channel/$channelId`}
                   params={{
                     channelId: videoItems.snippet.channelId,
                   }}

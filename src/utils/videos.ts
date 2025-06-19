@@ -26,7 +26,7 @@ const videosOptions = {
   url: `${BASE_URL}/videos`,
   params: {
     ...options.params,
-    maxResults: "5",
+    maxResults: "50",
     part: "snippet,statistics,contentDetails",
     chart: "mostPopular",
   },
@@ -107,7 +107,7 @@ export const fetchSingleVideo = createServerFn({ method: "GET" })
         if (err.response?.status === 429) {
           throw new Error("You have made too many requests");
         }
-        throw new Error("Failed to fetch Videos");
+        throw new Error("Failed to fetch Video Info");
       });
 
     // console.log({ video });
@@ -140,3 +140,13 @@ export const singleVideoQueryOptions = (videoId: string) =>
     queryKey: ["videos", videoId],
     queryFn: ({ queryKey }) => fetchSingleVideo({ data: queryKey[1] }),
   });
+
+export const channelPlaylistVideoOptions = (
+  videoIds: string,
+  channelId: string
+) => {
+  return queryOptions({
+    queryKey: ["channel-videos", videoIds, channelId],
+    queryFn: ({ queryKey }) => fetchSingleVideo({ data: queryKey[1] }),
+  });
+};

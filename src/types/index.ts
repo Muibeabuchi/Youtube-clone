@@ -7,9 +7,9 @@ export interface Video {
   views: string;
   likes: string;
   uploadDate: string;
-  duration: string;
-  channelName: string;
-  channelImageUrl: string;
+  duration?: string;
+  channelName?: string;
+  channelImageUrl?: string;
 }
 
 export interface Channel {

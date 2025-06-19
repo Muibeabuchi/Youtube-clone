@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-// import Image from "next/image";
 import type { Video } from "@/types";
 
 interface VideoCardProps {
@@ -66,32 +65,36 @@ export function VideoCard({
         </div>
       </div>
       <div className="flex gap-3 mt-3">
-        <Link
-          to={`/channel/$channelId`}
-          params={{
-            channelId: video.channelId,
-          }}
-          className="flex-shrink-0"
-        >
-          <img
-            src={video.channelImageUrl || "/placeholder.svg"}
-            alt={video.channelName || "Channel"}
-            width={36}
-            height={36}
-            className="rounded-full"
-          />
-        </Link>
-        <div>
-          <h3 className="font-medium text-sm line-clamp-2">{video.title}</h3>
+        {video.channelImageUrl && (
           <Link
-            to="/channel/$channelId"
+            to={`/channel/$channelId`}
             params={{
               channelId: video.channelId,
             }}
-            className="text-xs text-muted-foreground mt-1"
+            className="flex-shrink-0"
           >
-            {video.channelName}
+            <img
+              src={video.channelImageUrl || "/placeholder.svg"}
+              alt={video.channelName || "Channel"}
+              width={36}
+              height={36}
+              className="rounded-full"
+            />
           </Link>
+        )}
+        <div>
+          <h3 className="font-medium text-sm line-clamp-2">{video.title}</h3>
+          {video.channelName && (
+            <Link
+              to={`/channel/$channelId`}
+              params={{
+                channelId: video.channelId,
+              }}
+              className="text-xs text-muted-foreground mt-1"
+            >
+              {video.channelName}
+            </Link>
+          )}
           <p className="text-xs text-muted-foreground">
             {video.views} views • {video.uploadDate}
           </p>
