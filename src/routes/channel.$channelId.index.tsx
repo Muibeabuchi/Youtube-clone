@@ -12,7 +12,7 @@ import { channelSectionInfoOptions } from "@/utils/channel-sections";
 import { fetchChannelsUploadedVideosPlaylistItemOptions } from "@/utils/playlist-items";
 import { channelPlaylistVideoOptions } from "@/utils/videos";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { useRef } from "react";
 
@@ -55,6 +55,13 @@ function RouteComponent() {
   const playListVideos = channelSectionInfo?.playListVideos;
   // console.log({ featuredChannelInfo });
 
+  if (!channelSectionInfo?.featuredChannelInfo) {
+    return <div> No Channel Sections</div>;
+  }
+  if (!channelSectionInfo?.playListVideos) {
+    return <div> No Channel Sections</div>;
+  }
+
   return (
     <div className="space-y-8">
       {featuredChannelInfo && (
@@ -75,21 +82,29 @@ function RouteComponent() {
             >
               {featuredChannelInfo.channelData &&
                 featuredChannelInfo?.channelData?.map((channel, index) => (
-                  <div key={index} className="flex-shrink-0 text-center">
-                    <div className="w-24 h-24 mb-3">
-                      <img
-                        src={channel.thumbnailUrl}
-                        alt={channel.title}
-                        className="w-full h-full rounded-full object-cover"
-                      />
+                  <Link
+                    key={index}
+                    to="/channel/$channelId"
+                    params={{
+                      channelId: channel.channelId,
+                    }}
+                  >
+                    <div className="flex-shrink-0 text-center">
+                      <div className="w-24 h-24 mb-3">
+                        <img
+                          src={channel.thumbnailUrl}
+                          alt={channel.title}
+                          className="w-full h-full rounded-full object-cover"
+                        />
+                      </div>
+                      <h3 className="text-white font-medium text-sm mb-1">
+                        {channel.title.toUpperCase()}
+                      </h3>
+                      <p className="text-gray-400 text-xs mb-3">
+                        {channel.subCount} subscribers
+                      </p>
                     </div>
-                    <h3 className="text-white font-medium text-sm mb-1">
-                      {channel.title.toUpperCase()}
-                    </h3>
-                    <p className="text-gray-400 text-xs mb-3">
-                      {channel.subCount} subscribers
-                    </p>
-                  </div>
+                  </Link>
                 ))}
             </div>
             <button
@@ -124,6 +139,7 @@ function RouteComponent() {
           });
           return (
             <PlaylistSection
+              key={vid.title}
               channelVideos={transformedVideos}
               playListDescription={vid.description}
               playListTitle={vid.title}

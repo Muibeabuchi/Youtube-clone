@@ -33,6 +33,7 @@ export interface ContentDetails {
 
 export interface FeaturedChannelReturnType {
   title: string;
+  channelId: string;
   thumbnailUrl: string;
   subCount: string;
   // description: string;

@@ -56,10 +56,13 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
     const featuredChannels = channelSections.items.find(
       (section) => section.snippet.type === "multiplechannels"
     );
+
+    console.log({ featuredChannels: featuredChannels?.contentDetails });
     // Grab the playlistId for #SinglePlaylist
     const validSectionPlaylists = channelSections.items.filter(
       (item) => item.contentDetails && item.snippet.type === "singleplaylist"
     );
+    console.log({ validSectionPlaylists });
 
     // Get the Info for the featuredChannels
     let featuredChannelInfo:
@@ -83,10 +86,13 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
               item.snippet.thumbnails.high.url ||
               item.snippet.thumbnails.default.url,
             title: item.snippet.title,
+            channelId: item.id,
             // description: item.snippet.description,
             // description: featuredChannels.snippet.title ?? "",
           })
         );
+
+        console.log({ channelData });
         featuredChannelInfo = {
           channelData,
           channelPlaylistTitle: featuredChannels.snippet.title,
@@ -137,16 +143,22 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
         });
       }
 
-      const playListVideos = await Promise.all(
-        channelPlaylistInfo?.map(async (list) => ({
-          ...list,
-          videos: await getPlayListItemVideos(list.playlistId),
-        }))
-      );
+      const playListVideos =
+        (await Promise.all(
+          channelPlaylistInfo?.map(async (list) => ({
+            ...list,
+            videos: await getPlayListItemVideos(list.playlistId),
+          }))
+        )) ?? [];
 
       return {
         featuredChannelInfo,
         playListVideos,
+      };
+    } else {
+      return {
+        featuredChannelInfo,
+        playListVideos: [],
       };
     }
   });
