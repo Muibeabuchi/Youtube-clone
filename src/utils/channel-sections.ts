@@ -62,8 +62,12 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
     );
 
     // Get the Info for the featuredChannels
-    let featuredChannelInfo: FeaturedChannelReturnType[] | undefined =
-      undefined;
+    let featuredChannelInfo:
+      | {
+          channelData: FeaturedChannelReturnType[] | undefined;
+          channelPlaylistTitle: string | undefined;
+        }
+      | undefined = undefined;
     if (featuredChannels) {
       const featuredChannelIds = featuredChannels.contentDetails?.channels;
       if (featuredChannelIds) {
@@ -79,9 +83,14 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
               item.snippet.thumbnails.high.url ||
               item.snippet.thumbnails.default.url,
             title: item.snippet.title,
+            // description: item.snippet.description,
+            // description: featuredChannels.snippet.title ?? "",
           })
         );
-        featuredChannelInfo = channelData;
+        featuredChannelInfo = {
+          channelData,
+          channelPlaylistTitle: featuredChannels.snippet.title,
+        };
       }
     }
 

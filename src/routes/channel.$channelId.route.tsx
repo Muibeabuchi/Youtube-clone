@@ -85,7 +85,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white">
+    <div className="min-h-screen text-white">
       {/* <Dialog open={showInfoModal} onOpenChange={setShowInfoModal}>
         <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md">
           <DialogHeader>

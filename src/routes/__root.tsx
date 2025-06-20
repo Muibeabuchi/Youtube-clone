@@ -82,11 +82,11 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const location = useLocation({
-    select: (l) => l.pathname,
-  });
+  // const location = useLocation({
+  //   select: (l) => l.pathname,
+  // });
 
-  const isHomePage = location === "/";
+  // const isHomePage = location === "/";
 
   return (
     <html>
@@ -102,12 +102,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         >
           <div className="min-h-screen flex flex-col">
             <Header />
-            {isHomePage && <CategoriesSection />}
-            <main
-              className={cn("flex-1 pt-20 pb-8", {
-                "pt-4": !isHomePage,
-              })}
-            >
+            <main className={cn("flex-1 pt-4 pb-8", {})}>
               <div className="pt-2">{children}</div>
             </main>
           </div>

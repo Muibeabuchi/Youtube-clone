@@ -38,7 +38,7 @@ const singleVideoOptions = (videoId: string) => ({
   url: `${BASE_URL}/videos`,
   params: {
     ...options.params,
-    part: "id,status,statistics,snippet,player",
+    part: "id,status,statistics,snippet,player,contentDetails",
     id: videoId,
   },
 });

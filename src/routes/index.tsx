@@ -1,3 +1,4 @@
+import { CategoriesSection } from "@/components/categories-section";
 import { VideoGrid } from "@/components/video-grid";
 import {
   convertISOtoPublishedDate,
@@ -44,7 +45,9 @@ export default function Home() {
     };
   });
   return (
-    <div className="w-full">
+    <div className="w-full pt-16">
+      <CategoriesSection />
+
       <VideoGrid videos={transformedVideos} />
     </div>
   );

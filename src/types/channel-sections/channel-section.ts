@@ -35,4 +35,5 @@ export interface FeaturedChannelReturnType {
   title: string;
   thumbnailUrl: string;
   subCount: string;
+  // description: string;
 }

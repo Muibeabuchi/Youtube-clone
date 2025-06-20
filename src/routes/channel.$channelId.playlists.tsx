@@ -21,6 +21,10 @@ function RouteComponent() {
   const { data: channelPlaylists } = useSuspenseQuery(
     fetchChannelsVideosPlaylistOptions(channelId)
   );
+
+  if (channelPlaylists.items.length === 0) {
+    return <div className="text-center pt-10">No Playlists</div>;
+  }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {channelPlaylists.items.map((playlist) => (

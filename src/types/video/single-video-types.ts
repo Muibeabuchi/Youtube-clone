@@ -1,3 +1,5 @@
+import { ContentDetails } from "..";
+
 export interface SingleVideoType {
   kind: string;
   etag: string;
@@ -13,6 +15,8 @@ export interface SingleVideoItem {
   status: Status;
   statistics: Statistics;
   player: Player;
+  contentDetails: ContentDetails;
+
   // statistics:Statistics
 }
 
