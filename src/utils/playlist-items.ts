@@ -24,7 +24,7 @@ const options = {
 
 const channelVideosPlaylistOptions = (
   playListId: string,
-  maxResult: string = "35"
+  maxResult: number = 35
 ) => ({
   ...options,
   method: "GET",
@@ -41,11 +41,11 @@ const channelVideosPlaylistOptions = (
 export const fetchChannelsUploadedVideosPlaylistItem = createServerFn({
   method: "GET",
 })
-  .validator((data: string) => data)
+  .validator((data: { playlistIds: string; maxResult?: number }) => data)
   .handler(async ({ data }) => {
     const videos = await axios
       .request<ChannelVideosPlayListItemsType>(
-        channelVideosPlaylistOptions(data)
+        channelVideosPlaylistOptions(data.playlistIds, data.maxResult)
       )
       .then((r) => r.data)
       .catch((err: AxiosError) => {
@@ -70,5 +70,7 @@ export const fetchChannelsUploadedVideosPlaylistItemOptions = (
   queryOptions({
     queryKey: ["playlist-items", playlistId],
     queryFn: ({ queryKey }) =>
-      fetchChannelsUploadedVideosPlaylistItem({ data: queryKey[1] }),
+      fetchChannelsUploadedVideosPlaylistItem({
+        data: { playlistIds: queryKey[1] },
+      }),
   });

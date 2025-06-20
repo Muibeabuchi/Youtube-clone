@@ -301,7 +301,7 @@ function RouteComponent() {
             const indexPage = tab.id === "home";
             return (
               <Link
-                id={tab.id}
+                key={tab.id}
                 to={
                   indexPage
                     ? `/channel/$channelId`

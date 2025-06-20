@@ -10,6 +10,7 @@ import { formatYouTubeViewCount } from "@/lib/utils";
 import { fetchPlaylistsById } from "./playlist";
 import { fetchSingleVideo } from "./videos";
 import { queryOptions } from "@tanstack/react-query";
+import { fetchChannelsUploadedVideosPlaylistItem } from "./playlist-items";
 
 const API_KEY = import.meta.env.VITE_XRAPIDAPIKEY;
 const PARAM_KEY = import.meta.env.VITE_PARAM_KEY;
@@ -111,15 +112,26 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
         description: item.snippet.description,
       }));
 
+      // grab the playlist INfo and add the playlistId in the return
+      async function getPlayListItemVideos(playlistIds: string) {
+        const playlistItemVideoIds = (
+          await fetchChannelsUploadedVideosPlaylistItem({
+            data: { playlistIds, maxResult: 10 },
+          })
+        ).map((item) => item.videoId);
+
+        return fetchSingleVideo({
+          data: {
+            isPlaylist: true,
+            videoIds: playlistItemVideoIds.join(","),
+          },
+        });
+      }
+
       const playListVideos = await Promise.all(
         channelPlaylistInfo?.map(async (list) => ({
           ...list,
-          videos: await fetchSingleVideo({
-            data: {
-              isPlaylist: true,
-              videoIds: list.playlistId,
-            },
-          }),
+          videos: await getPlayListItemVideos(list.playlistId),
         }))
       );
 
