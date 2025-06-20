@@ -58,16 +58,17 @@ function RouteComponent() {
     <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 w-full max-w-[1800px] mx-auto px-3 sm:px-4">
       <div className="flex-1 min-w-0">
         {/* Video Player */}
-        <div className="min-h-[500px] aspect-video w-full bg-black rounded-lg xl:rounded-xl overflow-hidden">
+        <div className="lg:h-[450px] h-[400px] aspect-video w-full bg-black rounded-lg xl:rounded-xl overflow-hidden">
           <iframe
             width="100%"
-            height="600px"
+            height="100%"
             src={`https://www.youtube.com/embed/${videoId}`}
             title={videoItems.snippet.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
+          {/* <ReactPlayer url={`https://www.youtube.com/embed/${videoId}`} /> */}
         </div>
 
         {/* Video Info */}

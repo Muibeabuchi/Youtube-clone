@@ -53,7 +53,22 @@ function RouteComponent() {
   );
   const featuredChannelInfo = channelSectionInfo?.featuredChannelInfo;
   const playListVideos = channelSectionInfo?.playListVideos;
-  // console.log({ featuredChannelInfo });
+
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  const scroll = (
+    ref: React.RefObject<HTMLDivElement | null>,
+    direction: "left" | "right"
+  ) => {
+    if (!ref) return;
+    if (ref.current) {
+      const scrollAmount = 320;
+      ref.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   if (!channelSectionInfo?.featuredChannelInfo) {
     return <div> No Channel Sections</div>;
@@ -71,13 +86,13 @@ function RouteComponent() {
           </h2>
           <div className="relative group">
             <button
-              // onClick={() => scroll(mkbhdScrollRef, "left")}
+              onClick={() => scroll(ref, "left")}
               className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/80 hover:bg-black text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <div
-              // ref={mkbhdScrollRef}
+              ref={ref}
               className="flex gap-x-32 overflow-x-auto scrollbar-hide pb-4"
             >
               {featuredChannelInfo.channelData &&
@@ -109,7 +124,7 @@ function RouteComponent() {
                 ))}
             </div>
             <button
-              // onClick={() => scroll(mkbhdScrollRef, "right")}
+              onClick={() => scroll(ref, "right")}
               className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/80 hover:bg-black text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronRight className="w-5 h-5" />
