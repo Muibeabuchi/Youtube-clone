@@ -71,19 +71,6 @@ function RouteComponent() {
   const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [showSubscribedDropdown, setShowSubscribedDropdown] = useState(false);
 
-  const scroll = (
-    ref: React.RefObject<HTMLDivElement>,
-    direction: "left" | "right"
-  ) => {
-    if (ref.current) {
-      const scrollAmount = 320;
-      ref.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
   useEffect(
     function () {
       setActiveTab(tabUrl);

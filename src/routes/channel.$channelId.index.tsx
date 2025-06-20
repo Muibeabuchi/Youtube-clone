@@ -88,9 +88,10 @@ function RouteComponent() {
                     params={{
                       channelId: channel.channelId,
                     }}
+                    className="flex-shrink-0 text-center"
                   >
-                    <div className="flex-shrink-0 text-center">
-                      <div className="w-24 h-24 mb-3">
+                    <div className="flex items-center flex-col justify-center">
+                      <div className="w-24 h-24 mb-3 ">
                         <img
                           src={channel.thumbnailUrl}
                           alt={channel.title}
