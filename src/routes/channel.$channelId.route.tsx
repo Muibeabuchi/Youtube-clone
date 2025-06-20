@@ -172,56 +172,34 @@ function RouteComponent() {
       </Dialog> */}
 
       {/* Description Modal */}
-      {/* <Dialog open={showDescriptionModal} onOpenChange={setShowDescriptionModal}>
-        <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-2xl max-h-[80vh] overflow-y-auto">
+      <Dialog
+        open={showDescriptionModal}
+        onOpenChange={setShowDescriptionModal}
+      >
+        <DialogContent className=" text-white max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
-              Tech Spurt
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowDescriptionModal(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+              {channelInfo.snippet.title}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold mb-3">Description</h3>
               <div className="text-sm text-gray-300 space-y-4 leading-relaxed">
-                <p>
-                  Expect in-depth tech reviews, comparisons, unboxings and hands-on features with fresh new UK
-                  smartphones, laptops, wearables, apps and other new gadgets.
-                </p>
-                <p>
-                  With over 15 years of experience reviewing technology, UK journalist Chris Barraclough has written for
-                  Tech Radar and dozens of PC/smartphone publications, as well as editing Mobile Choice magazine. Like
-                  Unbox Therapy, Supersaf, MKBHD and others, he also spent several years presenting tech-based YouTube
-                  videos for the likes of Tech Radar and Recombu.
-                </p>
-                <p>
-                  We don't just pull things out of boxes here. We dive deep into those smartphones, gaming machines,
-                  smartwatches and other tech - Chris uses each device as it was intended for a proper real life review,
-                  and doesn't just cover the shiny expensive stuff. You'll find budget kit as well, because we're not
-                  all minted.
-                </p>
-                <p>Why not be a sport and give that subscribe button a jolly good poke too. Cheers!</p>
-                <p>Email address provided for PR requests - we are NOT hiring editors, thumbnail artists etc!</p>
+                {channelInfo.snippet.description}
               </div>
             </div>
-            <div className="border-t border-gray-700 pt-4">
+            {/* <div className="border-t border-gray-700 pt-4">
               <h3 className="font-semibold mb-3">Links</h3>
               <div className="space-y-2">
                 <a href="#" className="block text-blue-400 hover:text-blue-300 text-sm">
                   TikTok shenanigans
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </DialogContent>
-      </Dialog> */}
+      </Dialog>
 
       {channelInfo.brandingSettings.image && (
         <div className="relative w-full h-32 sm:h-40 md:h-48  rounded-md px-20">

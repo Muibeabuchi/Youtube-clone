@@ -25,7 +25,7 @@ export function Header() {
           <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
             <span className="text-white font-bold text-sm">CT</span>
           </div>
-          <span className="font-bold text-xl">ChikiTube</span>
+          <span className="font-bold hidden lg:block text-xl">ChikiTube</span>
         </Link>
 
         {/* <div className="flex-1 max-w-2xl mx-8">
