@@ -30,6 +30,17 @@ const channelPlaylistsOptions = (channelId: string) => ({
   },
 });
 
+const playlistIdsOptions = (id: string) => ({
+  ...options,
+  method: "GET",
+  url: `${BASE_URL}/playlists`,
+  params: {
+    ...options.params,
+    part: "contentDetails,snippet,status,id,localizations",
+    id,
+  },
+});
+
 export const fetchChannelPlaylists = createServerFn({
   method: "GET",
 })
@@ -48,8 +59,31 @@ export const fetchChannelPlaylists = createServerFn({
     return channelPlaylists;
   });
 
+export const fetchPlaylistsById = createServerFn({
+  method: "GET",
+})
+  .validator((data: string) => data)
+  .handler(async ({ data }) => {
+    const channelPlaylists = await axios
+      .request<PlaylistType>(playlistIdsOptions(data))
+      .then((r) => r.data)
+      .catch((err: AxiosError) => {
+        console.log({ err });
+        if (err.response?.status === 429) {
+          throw new Error("You have made too many requests");
+        }
+        throw new Error("Failed to fetch Channel Info");
+      });
+    return channelPlaylists;
+  });
+
 export const fetchChannelsVideosPlaylistOptions = (channelId: string) =>
   queryOptions({
     queryKey: ["channel-playlists", channelId],
+    queryFn: ({ queryKey }) => fetchChannelPlaylists({ data: queryKey[1] }),
+  });
+export const fetchPlaylistIdVideosOptions = (ids: string) =>
+  queryOptions({
+    queryKey: ["playlists-ids", ids],
     queryFn: ({ queryKey }) => fetchChannelPlaylists({ data: queryKey[1] }),
   });

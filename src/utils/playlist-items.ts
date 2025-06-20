@@ -22,7 +22,10 @@ const options = {
   },
 };
 
-const channelVideosPlaylistOptions = (playListId: string) => ({
+const channelVideosPlaylistOptions = (
+  playListId: string,
+  maxResult: string = "35"
+) => ({
   ...options,
   method: "GET",
   url: `${BASE_URL}/playlistItems`,
@@ -31,7 +34,7 @@ const channelVideosPlaylistOptions = (playListId: string) => ({
     // part: "snippet,statistics,contentOwnerDetails,contentDetails,brandingSettings,status",
     part: "contentDetails,snippet,status,id",
     playlistId: playListId,
-    maxResults: "35",
+    maxResults: maxResult,
   },
 });
 
@@ -39,7 +42,7 @@ export const fetchChannelsUploadedVideosPlaylistItem = createServerFn({
   method: "GET",
 })
   .validator((data: string) => data)
-  .handler(async ({ context, data }) => {
+  .handler(async ({ data }) => {
     const videos = await axios
       .request<ChannelVideosPlayListItemsType>(
         channelVideosPlaylistOptions(data)
@@ -53,7 +56,10 @@ export const fetchChannelsUploadedVideosPlaylistItem = createServerFn({
         throw new Error("Failed to fetch Channel Info");
       });
 
-    const videoIds = videos.items.map((vid) => vid.snippet.resourceId.videoId);
+    const videoIds = videos.items.map((vid) => ({
+      id: vid.id,
+      videoId: vid.snippet.resourceId.videoId,
+    }));
 
     return videoIds;
   });

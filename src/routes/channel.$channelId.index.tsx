@@ -1,12 +1,14 @@
-import { singleChannelQueryOptions } from "@/utils/channel";
-import { fetchChannelsUploadedVideosPlaylistItemOptions } from "@/utils/playlist-items";
-import {
-  channelPlaylistVideoOptions,
-  singleVideoQueryOptions,
-} from "@/utils/videos";
+import { channelSectionInfoOptions } from "@/utils/channel-sections";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/channel/$channelId/")({
+  loader: async ({ context, params }) => {
+    const channelSectionInfo = await context.queryClient.ensureQueryData(
+      channelSectionInfoOptions(params.channelId)
+    );
+
+    console.log({ channelSectionInfo });
+  },
   component: RouteComponent,
 });
 

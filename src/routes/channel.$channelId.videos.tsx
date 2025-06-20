@@ -24,7 +24,7 @@ export const Route = createFileRoute("/channel/$channelId/videos")({
     const videoIds = await context.queryClient.ensureQueryData(
       fetchChannelsUploadedVideosPlaylistItemOptions(channelVideoPlaylistId)
     );
-    const videoIdsString = videoIds.join(",");
+    const videoIdsString = videoIds.map((v) => v.videoId).join(",");
 
     await context.queryClient.ensureQueryData(
       channelPlaylistVideoOptions(videoIdsString, params.channelId)

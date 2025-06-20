@@ -52,7 +52,6 @@ const channelImageUrlOptions = (channelIds: string) => ({
     part: "snippet,id,statistics",
     id: channelIds,
   },
-  headers: options.headers,
 });
 
 export const fetchVideos = createServerFn({ method: "GET" }).handler(
@@ -97,10 +96,10 @@ export const fetchVideos = createServerFn({ method: "GET" }).handler(
 );
 
 export const fetchSingleVideo = createServerFn({ method: "GET" })
-  .validator((data: string) => data)
-  .handler(async (ctx) => {
+  .validator((data: { videoIds: string; isPlaylist?: boolean }) => data)
+  .handler(async ({ data: { videoIds, isPlaylist } }) => {
     const video = await axios
-      .request<SingleVideoType>(singleVideoOptions(ctx.data))
+      .request<SingleVideoType>(singleVideoOptions(videoIds))
       .then((r) => r.data)
       .catch((err: AxiosError) => {
         console.log({ err });
@@ -109,6 +108,14 @@ export const fetchSingleVideo = createServerFn({ method: "GET" })
         }
         throw new Error("Failed to fetch Video Info");
       });
+
+    if (isPlaylist) {
+      return {
+        ...video,
+        channelImageUrl: undefined,
+        channelSubCount: undefined,
+      };
+    }
 
     // console.log({ video });
     const videoChannel = (
@@ -135,10 +142,12 @@ export const videosQueryOptions = () =>
     queryKey: ["videos"],
     queryFn: fetchVideos,
   });
+
 export const singleVideoQueryOptions = (videoId: string) =>
   queryOptions({
     queryKey: ["videos", videoId],
-    queryFn: ({ queryKey }) => fetchSingleVideo({ data: queryKey[1] }),
+    queryFn: ({ queryKey }) =>
+      fetchSingleVideo({ data: { videoIds: queryKey[1] } }),
   });
 
 export const channelPlaylistVideoOptions = (
@@ -147,6 +156,7 @@ export const channelPlaylistVideoOptions = (
 ) => {
   return queryOptions({
     queryKey: ["channel-videos", videoIds, channelId],
-    queryFn: ({ queryKey }) => fetchSingleVideo({ data: queryKey[1] }),
+    queryFn: ({ queryKey }) =>
+      fetchSingleVideo({ data: { videoIds: queryKey[1] } }),
   });
 };

@@ -21,7 +21,7 @@ const options = {
   },
 };
 
-const singleChannelOptions = (channelId: string) => ({
+export const singleChannelOptions = (channelId: string) => ({
   ...options,
   method: "GET",
   url: `${BASE_URL}/channels`,

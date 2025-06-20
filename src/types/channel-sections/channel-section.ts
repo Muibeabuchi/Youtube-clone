@@ -30,3 +30,9 @@ export interface ContentDetails {
   playlists?: string[];
   channels?: string[];
 }
+
+export interface FeaturedChannelReturnType {
+  title: string;
+  thumbnailUrl: string;
+  subCount: string;
+}
