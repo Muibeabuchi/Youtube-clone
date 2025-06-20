@@ -5,7 +5,7 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -83,6 +83,13 @@ function RouteComponent() {
       });
     }
   };
+
+  useEffect(
+    function () {
+      setActiveTab(tabUrl);
+    },
+    [tabUrl]
+  );
 
   return (
     <div className="min-h-screen text-white">
