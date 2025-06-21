@@ -79,6 +79,7 @@ function RouteComponent() {
                 video.snippet.thumbnails?.maxres?.url ||
                 video.snippet.thumbnails?.high?.url,
               channelId: video.snippet.channelId,
+              duration: parseYouTubeDuration(video.contentDetails.duration),
             };
             return <VideoCard key={video.id} video={videoInfo} />;
           })}

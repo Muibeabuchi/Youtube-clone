@@ -20,21 +20,21 @@ export const Route = createFileRoute("/channel/$channelId/")({
   loader: async ({ context, params }) => {
     // Prefetch the data for the Videos page
     const channelId = params.channelId;
-    // const channelInfo = await context.queryClient.ensureQueryData(
-    //   singleChannelQueryOptions(channelId)
-    // );
+    const channelInfo = await context.queryClient.ensureQueryData(
+      singleChannelQueryOptions(channelId)
+    );
 
-    // const channelVideoPlaylistId =
-    //   channelInfo.items?.[0].contentDetails.relatedPlaylists.uploads;
+    const channelVideoPlaylistId =
+      channelInfo.items?.[0].contentDetails.relatedPlaylists.uploads;
 
-    // const videoIds = await context.queryClient.ensureQueryData(
-    //   fetchChannelsUploadedVideosPlaylistItemOptions(channelVideoPlaylistId)
-    // );
-    // const videoIdsString = videoIds?.map((v) => v.videoId).join(",");
+    const videoIds = await context.queryClient.ensureQueryData(
+      fetchChannelsUploadedVideosPlaylistItemOptions(channelVideoPlaylistId)
+    );
+    const videoIdsString = videoIds?.map((v) => v.videoId).join(",");
 
-    // context.queryClient.prefetchQuery(
-    //   channelPlaylistVideoOptions(videoIdsString, params.channelId)
-    // );
+    context.queryClient.prefetchQuery(
+      channelPlaylistVideoOptions(videoIdsString ?? "", params.channelId)
+    );
 
     const channelSectionInfo = await context.queryClient.ensureQueryData(
       channelSectionInfoOptions(params.channelId)

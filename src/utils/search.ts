@@ -56,7 +56,7 @@ export const fetchSearchResults = createServerFn({ method: "GET" })
 
     //   Populate the Result with necessary Information
     return await Promise.all(
-      searchResults.items.map(async (item) => {
+      searchResults.items.map(async (item, index) => {
         //   Check the type of the search Result
         const resultType = extractSearchType(item.id.kind);
         const searchType: "channel" | "video" = item.id.channelId
@@ -74,6 +74,7 @@ export const fetchSearchResults = createServerFn({ method: "GET" })
             channelResult.items?.[0].statistics.subscriberCount;
 
           const channelInfo = {
+            channelId,
             searchType,
             thumbnail:
               item.snippet.thumbnails.high.url ||
@@ -89,29 +90,33 @@ export const fetchSearchResults = createServerFn({ method: "GET" })
 
         if (confirmResultType && searchType === "video") {
           // Get the video ViewCount by calling the video api
-          const videoViewCount = (
-            await fetchSingleVideo({ data: { videoIds: item.id.videoId! } })
-          ).items?.[0].statistics.viewCount;
-
-          // Get the channel Info
-          const channelResult = await fetchSingleChannelInfo({
-            data: channelId,
+          const videoInfo = await fetchSingleVideo({
+            data: { videoIds: item.id.videoId! },
           });
-          const channelThumbnail =
-            channelResult.items?.[0].snippet.thumbnails.high.url ||
-            channelResult.items?.[0].snippet.thumbnails.medium.url;
+          const videoViewCount = videoInfo.items?.[0]?.statistics.viewCount;
+
+          // // Get the channel Info
+          // const channelResult = await fetchSingleChannelInfo({
+          //   data: channelId,
+          // });
+          // const channelThumbnail =
+          //   channelResult.items?.[0].snippet.thumbnails.high.url ||
+          //   channelResult.items?.[0].snippet.thumbnails.medium.url;
 
           const videoReturn = {
             searchType,
+            duration: videoInfo.items?.[0].contentDetails.duration,
             publishedAt: item.snippet.publishedAt,
             channelId: item.snippet.channelId,
             videoTitle: item.snippet.title,
             videoDescription: item.snippet.description,
             videoThumbnail:
-              item.snippet.thumbnails.high.url ||
-              item.snippet.thumbnails.default.url,
+              videoInfo.items?.[0].snippet.thumbnails.high.url ||
+              videoInfo.items?.[0].snippet.thumbnails.default.url,
+            // item.snippet.thumbnails.high.url ||
+            // item.snippet.thumbnails.default.url,
             channelTitle: item.snippet.channelTitle,
-            channelThumbnail,
+            channelThumbnail: videoInfo.channelImageUrl,
             videoViewCount,
           };
 

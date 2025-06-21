@@ -1,41 +1,34 @@
-// import { useSearchParams } from "@tanstack/react-router"
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-// import {
-//   getSearchResults,
-//   type SearchResultItem,
-//   type VideoResult,
-//   type ChannelResult,
-//   type PlaylistResult,
-// } from "@/data/searchResultsData";
-import { CheckCircle, Info, Menu, ChevronDown, Bell } from "lucide-react";
-import { Link, useSearch } from "@tanstack/react-router";
-import { ChannelResult, VideoResult } from "@/types/search/video-result";
+import { Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { searchQueryOptions } from "@/utils/search";
+import {
+  ChannelType,
+  SearchType,
+  VideoType,
+} from "@/types/search/video-result";
+import {
+  formatYouTubeViewCount,
+  getYouTubePublishedDate,
+  parseYouTubeDuration,
+} from "@/lib/utils";
 
-export type SearchResultItem = VideoResult | ChannelResult;
-
-function VideoResultCard({
-  result,
-  videoId,
-  channelId,
-}: {
-  result: VideoResult;
-  videoId: string;
-  channelId: string;
-}) {
+function VideoResultCard({ result }: { result: VideoType | null }) {
+  if (!result) {
+    return null;
+  }
   return (
     <div className="flex gap-4 mb-8 group">
       {/* Video Thumbnail */}
       <div className="relative flex-shrink-0">
-        <Link to="/watch" search={{ v: videoId }}>
+        <Link to="/watch" search={{ v: result.channelId }}>
           <div className="relative overflow-hidden rounded-xl">
             <img
-              src={result.thumbnailUrl}
-              alt={result.title}
+              src={result.videoThumbnail}
+              alt={result.channelTitle}
               className="w-[360px] h-[202px] object-cover transition-all duration-200 group-hover:rounded-lg"
             />
             <div className="absolute bottom-2 right-2 bg-black/90 text-white text-xs px-2 py-1 rounded font-medium">
-              {result.duration}
+              {parseYouTubeDuration(result.duration)}
             </div>
           </div>
         </Link>
@@ -43,69 +36,58 @@ function VideoResultCard({
 
       {/* Video Info */}
       <div className="flex-1 min-w-0 pt-1">
-        <Link to="/watch" search={{ v: videoId }}>
+        <Link to="/watch" search={{ v: result.channelId }}>
           <h3 className="text-xl font-normal text-white hover:text-blue-400 transition-colors line-clamp-2 mb-3 leading-6">
-            {result.title}
+            {result.channelTitle}
           </h3>
         </Link>
 
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-3">
-          <span>{result.views}</span>
+          <span>{formatYouTubeViewCount(Number(result.videoViewCount))}</span>
           <span className="text-gray-600">•</span>
-          <span>{result.uploadAge}</span>
-          {/* {result.badges &&
-            result.badges.map((badge) => (
-              <Badge
-                key={badge}
-                variant="secondary"
-                className="text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 border-0 px-2 py-0.5"
-              >
-                {badge}
-              </Badge>
-            ))} */}
+          <span>{getYouTubePublishedDate(result.publishedAt)}</span>
         </div>
 
         <div className="flex items-center gap-3 mb-4">
-          <Link to="/channel/$channelId" params={{ channelId }}>
+          <Link
+            to="/channel/$channelId"
+            params={{ channelId: result.channelId }}
+          >
             <img
-              src={result.channelAvatar}
-              alt={result.channelName}
+              src={result.channelThumbnail}
+              alt={result.channelTitle}
               className="w-6 h-6 rounded-full hover:opacity-80 transition-opacity"
             />
           </Link>
           <Link
             to="/channel/$channelId"
-            params={{ channelId }}
+            params={{ channelId: result.channelId }}
             className="text-sm text-gray-400 hover:text-white transition-colors font-medium"
           >
-            {result.channelName}
+            {result.channelTitle}
           </Link>
-          {result.verified && <CheckCircle className="w-4 h-4 text-gray-500" />}
         </div>
 
         <p className="text-sm text-gray-400 line-clamp-2 leading-5 pr-4">
-          {result.description}
+          {result.videoDescription}
         </p>
       </div>
     </div>
   );
 }
 
-function ChannelResultCard({
-  result,
-  channelId,
-}: {
-  result: ChannelResult;
-  channelId: string;
-}) {
+function ChannelResultCard({ result }: { result: ChannelType | null }) {
+  if (!result) {
+    return null;
+  }
   return (
     <div className="flex gap-6 mb-8 group">
       {/* Channel Avatar */}
       <div className="flex-shrink-0">
-        <Link to="/channel/$channelId" params={{ channelId }}>
+        <Link to="/channel/$channelId" params={{ channelId: result.channelId }}>
           <img
-            src={result.channelAvatar}
-            alt={result.channelName}
+            src={result.thumbnail}
+            alt={result.channelTitle}
             className="w-[120px] h-[120px] rounded-full object-cover hover:opacity-90 transition-opacity"
           />
         </Link>
@@ -114,25 +96,28 @@ function ChannelResultCard({
       {/* Channel Info */}
       <div className="flex-1 min-w-0 pt-2">
         <div className="flex items-center gap-2 mb-2">
-          <Link to="/channel/$channelId" params={{ channelId }}>
+          <Link
+            to="/channel/$channelId"
+            params={{ channelId: result.channelId }}
+          >
             <h3 className="text-xl font-normal text-white hover:text-blue-400 transition-colors">
-              {result.channelName}
+              {result.channelTitle}
             </h3>
           </Link>
-          {result.verified && <CheckCircle className="w-5 h-5 text-gray-500" />}
+          {/* {result.verified && <CheckCircle className="w-5 h-5 text-gray-500" />} */}
         </div>
 
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="font-medium">{result.channelHandle}</span>
+          <span className="font-medium">@{result.channelTagName}</span>
           <span className="text-gray-600">•</span>
-          <span>{result.subscriberCount}</span>
+          <span>{result.channelSubCount}</span>
         </div>
 
         <p className="text-sm text-gray-400 line-clamp-2 mb-6 leading-5 max-w-2xl">
-          {result.description}
+          {result.channelDescription}
         </p>
 
-        <div>
+        {/* <div>
           {result.subscribed ? (
             <Button
               variant="secondary"
@@ -151,7 +136,7 @@ function ChannelResultCard({
               Subscribe
             </Button>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -210,12 +195,20 @@ function ChannelResultCard({
 //   );
 // }
 
-function SearchResultCard({ result }: { result: SearchResultItem }) {
-  switch (result.type) {
+function SearchResultCard({
+  searchType,
+  videoInfo,
+  channelInfo,
+}: {
+  searchType: SearchType | undefined;
+  videoInfo: VideoType | null;
+  channelInfo: ChannelType | null;
+}) {
+  switch (searchType) {
     case "video":
-    //   return <VideoResultCard result={result} />;
+      return <VideoResultCard result={videoInfo} />;
     case "channel":
-    //   return <ChannelResultCard result={result} />;
+      return <ChannelResultCard result={channelInfo} />;
     // case "playlist":
     //   return <PlaylistResultCard result={result} />;
     default:
@@ -223,43 +216,37 @@ function SearchResultCard({ result }: { result: SearchResultItem }) {
   }
 }
 
-export function SearchResultsPage() {
-  const searchParams = useSearch({
-    from: "/results",
-  });
+export function SearchResultsPage({ searchQuery }: { searchQuery: string }) {
+  const { data: searchResult } = useSuspenseQuery(
+    searchQueryOptions(searchQuery)
+  );
 
   return (
     <div className="min-h-screen  text-white">
       <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Search Results Header */}
-        {/* <div className="flex items-center justify-between mb-8">
-          <div className="flex-1" />
-          <div className="flex items-center gap-6">
-            <button className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
-              <Info className="w-4 h-4" />
-              About these results
-            </button>
-            <button className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-full px-4 py-2">
-              <Menu className="w-4 h-4" />
-              Filters
-            </button>
-          </div>
-        </div> */}
-
         {/* Search Results */}
         <div className="space-y-0">
-          {/* {results.map((result, index) => (
-            <div
-              key={result.id}
-              className={
-                index !== results.length - 1
-                  ? "border-b border-gray-800/50 pb-6"
-                  : ""
-              }
-            >
-              <SearchResultCard result={result} />
-            </div>
-          ))} */}
+          {searchResult.map((result, index) => {
+            const channelInfo =
+              result?.searchType === "channel" ? result : null;
+            const videoInfo = result?.searchType === "video" ? result : null;
+            return (
+              <div
+                key={index}
+                // className={
+                //   index !== results.length - 1
+                //     ? "border-b border-gray-800/50 pb-6"
+                //     : ""
+                // }
+              >
+                <SearchResultCard
+                  channelInfo={channelInfo}
+                  videoInfo={videoInfo}
+                  searchType={result?.searchType}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
