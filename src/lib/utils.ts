@@ -271,3 +271,7 @@ export function clampStringLength(
   // Truncate the text and append the suffix.
   return text.substring(0, effectiveMaxLengthForContent) + suffix;
 }
+
+export function extractSearchType(type: string) {
+  return type.split("#")[1];
+}
