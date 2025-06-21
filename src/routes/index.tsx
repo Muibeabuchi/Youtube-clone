@@ -19,7 +19,6 @@ import { createFileRoute } from "@tanstack/react-router";
 function Loading() {
   return (
     <div className="min-h-screen bg-background">
-      <HeaderSkeleton />
       <HomeFeedSkeleton />
     </div>
   );

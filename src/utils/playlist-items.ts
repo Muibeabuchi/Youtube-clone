@@ -73,6 +73,37 @@ export const fetchChannelsUploadedVideosPlaylistItem = createServerFn({
     }));
   });
 
+export const fetchPlaylistItem = createServerFn({
+  method: "GET",
+})
+  .validator((data: { playlistId: string; maxResult?: number }) => data)
+  .handler(async ({ data }) => {
+    const videos = await axios
+      .request<ChannelVideosPlayListItemsType | null>(
+        channelVideosPlaylistOptions(data.playlistId, data.maxResult)
+      )
+      .then((r) => r.data)
+      .catch((err: AxiosError) => {
+        console.log({ err });
+        if (err.response?.status === 429) {
+          throw new Error("You have made too many requests");
+        }
+        if (err.code === "404") {
+          // throw new Error("You have made too many requests");
+          return null;
+        }
+        throw new Error("Failed to fetch Channel Info");
+      });
+
+    // console.log({ videoIds222222222222: videos });
+    // // @ts-expect-error
+    // if (videos.error) {
+    //   return [];
+    // }
+
+    return videos;
+  });
+
 export const fetchChannelsUploadedVideosPlaylistItemOptions = (
   playlistId: string
 ) =>

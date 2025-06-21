@@ -24,8 +24,9 @@ import { CommentSkeleton } from "@/components/loading/comments-loading";
 export const Route = createFileRoute("/watch")({
   validateSearch: z.object({
     v: z.string(),
+    list: z.string().optional(),
   }),
-  loaderDeps: ({ search: { v } }) => ({ v }),
+  loaderDeps: ({ search: { v, list } }) => ({ v, list }),
   beforeLoad: ({ search }) => {
     if (!search.v || search.v.length === 0) {
       throw redirect({
@@ -33,10 +34,15 @@ export const Route = createFileRoute("/watch")({
       });
     }
   },
-  async loader({ context, params, deps }) {
+  async loader({ context, deps }) {
     const videoId = deps.v;
-    // prefetch the suggested videos for this
+    const playlistId = deps.list;
+
+    // prefetch the comments for this video
     context.queryClient.prefetchQuery(commentsOfVideoOptions(videoId));
+    // prefetch the playlist info if the list search parameter exists
+    // context.queryClient.prefetchQuery(commentsOfVideoOptions(videoId));
+
     await context.queryClient.ensureQueryData(singleVideoQueryOptions(videoId));
   },
   component: RouteComponent,

@@ -3,6 +3,10 @@ import axios, { AxiosError } from "axios";
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { PlaylistType } from "@/types/playlist/playlist";
+import {
+  fetchChannelsUploadedVideosPlaylistItem,
+  fetchPlaylistItem,
+} from "./playlist-items";
 
 const API_KEY = import.meta.env.VITE_XRAPIDAPIKEY;
 const PARAM_KEY = import.meta.env.VITE_PARAM_KEY;
@@ -77,13 +81,41 @@ export const fetchPlaylistsById = createServerFn({
     return channelPlaylists;
   });
 
+export const fetchChannelPlaylistAndPlayListFirstItem = createServerFn({
+  method: "GET",
+})
+  .validator((data: string) => data)
+  .handler(async ({ data }) => {
+    const channelPlaylists = await fetchChannelPlaylists({ data });
+    // grab the playlistItem for each Playlist
+    return await Promise.all(
+      channelPlaylists.items.map(async (item, index) => {
+        const FirstVideoId = (
+          await fetchPlaylistItem({
+            data: { playlistId: item.id, maxResult: 3 },
+          })
+        )?.items?.[0].contentDetails.videoId;
+        return {
+          FirstVideoId,
+          ...item,
+          // ...channelPlaylists,
+          // items: [
+
+          // ],
+        };
+      })
+    );
+  });
+
 export const fetchChannelsVideosPlaylistOptions = (channelId: string) =>
   queryOptions({
     queryKey: ["channel-playlists", channelId],
-    queryFn: ({ queryKey }) => fetchChannelPlaylists({ data: queryKey[1] }),
+    queryFn: ({ queryKey }) =>
+      fetchChannelPlaylistAndPlayListFirstItem({ data: queryKey[1] }),
   });
 export const fetchPlaylistIdVideosOptions = (ids: string) =>
   queryOptions({
     queryKey: ["playlists-ids", ids],
-    queryFn: ({ queryKey }) => fetchChannelPlaylists({ data: queryKey[1] }),
+    queryFn: ({ queryKey }) =>
+      fetchChannelPlaylistAndPlayListFirstItem({ data: queryKey[1] }),
   });
