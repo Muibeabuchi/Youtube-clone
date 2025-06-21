@@ -1,4 +1,6 @@
 import { CategoriesSection } from "@/components/categories-section";
+import { HeaderSkeleton } from "@/components/loading/header-skeleton";
+import { HomeFeedSkeleton } from "@/components/loading/home-feed-skeleton";
 import { VideoGrid } from "@/components/video-grid";
 import {
   convertISOtoPublishedDate,
@@ -11,6 +13,18 @@ import { videosQueryOptions } from "@/utils/videos";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
+// import { HeaderSkeleton } from "@/components/skeletons/header-skeleton"
+// import { HomeFeedSkeleton } from "@/components/skeletons/home-feed-skeleton"
+
+function Loading() {
+  return (
+    <div className="min-h-screen bg-background">
+      <HeaderSkeleton />
+      <HomeFeedSkeleton />
+    </div>
+  );
+}
+
 export const Route = createFileRoute("/")({
   loader: async (ctx) => {
     const videos = await ctx.context.queryClient.ensureQueryData(
@@ -19,6 +33,7 @@ export const Route = createFileRoute("/")({
 
     console.log({ videos });
   },
+  pendingComponent: Loading,
   component: Home,
 });
 

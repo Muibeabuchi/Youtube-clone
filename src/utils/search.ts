@@ -59,13 +59,13 @@ export const fetchSearchResults = createServerFn({ method: "GET" })
       searchResults.items.map(async (item) => {
         //   Check the type of the search Result
         const resultType = extractSearchType(item.id.kind);
-        const isVideo: "channel" | "video" = item.id.channelId
+        const searchType: "channel" | "video" = item.id.channelId
           ? "channel"
           : "video";
-        const confirmResultType = resultType === isVideo;
+        const confirmResultType = resultType === searchType;
         const channelId = item.snippet.channelId;
 
-        if (isVideo === "channel") {
+        if (confirmResultType && searchType === "channel") {
           // grab the channels Sub count
           const channelResult = await fetchSingleChannelInfo({
             data: channelId,
@@ -74,7 +74,7 @@ export const fetchSearchResults = createServerFn({ method: "GET" })
             channelResult.items?.[0].statistics.subscriberCount;
 
           const channelInfo = {
-            isVideo,
+            searchType,
             thumbnail:
               item.snippet.thumbnails.high.url ||
               item.snippet.thumbnails.default.url,
@@ -87,7 +87,7 @@ export const fetchSearchResults = createServerFn({ method: "GET" })
           return channelInfo;
         }
 
-        if (isVideo === "video") {
+        if (confirmResultType && searchType === "video") {
           // Get the video ViewCount by calling the video api
           const videoViewCount = (
             await fetchSingleVideo({ data: { videoIds: item.id.videoId! } })
@@ -102,7 +102,7 @@ export const fetchSearchResults = createServerFn({ method: "GET" })
             channelResult.items?.[0].snippet.thumbnails.medium.url;
 
           const videoReturn = {
-            isVideo,
+            searchType,
             publishedAt: item.snippet.publishedAt,
             channelId: item.snippet.channelId,
             videoTitle: item.snippet.title,

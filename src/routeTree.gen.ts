@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WatchRouteImport } from './routes/watch'
+import { Route as ResultsRouteImport } from './routes/results'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChannelChannelIdRouteRouteImport } from './routes/channel.$channelId.route'
 import { Route as ChannelChannelIdIndexRouteImport } from './routes/channel.$channelId.index'
@@ -19,6 +20,11 @@ import { Route as ChannelChannelIdPlaylistsRouteImport } from './routes/channel.
 const WatchRoute = WatchRouteImport.update({
   id: '/watch',
   path: '/watch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -50,6 +56,7 @@ const ChannelChannelIdPlaylistsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/results': typeof ResultsRoute
   '/watch': typeof WatchRoute
   '/channel/$channelId': typeof ChannelChannelIdRouteRouteWithChildren
   '/channel/$channelId/playlists': typeof ChannelChannelIdPlaylistsRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/results': typeof ResultsRoute
   '/watch': typeof WatchRoute
   '/channel/$channelId/playlists': typeof ChannelChannelIdPlaylistsRoute
   '/channel/$channelId/videos': typeof ChannelChannelIdVideosRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/results': typeof ResultsRoute
   '/watch': typeof WatchRoute
   '/channel/$channelId': typeof ChannelChannelIdRouteRouteWithChildren
   '/channel/$channelId/playlists': typeof ChannelChannelIdPlaylistsRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/results'
     | '/watch'
     | '/channel/$channelId'
     | '/channel/$channelId/playlists'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/results'
     | '/watch'
     | '/channel/$channelId/playlists'
     | '/channel/$channelId/videos'
@@ -91,6 +102,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/results'
     | '/watch'
     | '/channel/$channelId'
     | '/channel/$channelId/playlists'
@@ -100,6 +112,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ResultsRoute: typeof ResultsRoute
   WatchRoute: typeof WatchRoute
   ChannelChannelIdRouteRoute: typeof ChannelChannelIdRouteRouteWithChildren
 }
@@ -111,6 +124,13 @@ declare module '@tanstack/react-router' {
       path: '/watch'
       fullPath: '/watch'
       preLoaderRoute: typeof WatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -170,6 +190,7 @@ const ChannelChannelIdRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ResultsRoute: ResultsRoute,
   WatchRoute: WatchRoute,
   ChannelChannelIdRouteRoute: ChannelChannelIdRouteRouteWithChildren,
 }

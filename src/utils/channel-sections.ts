@@ -53,7 +53,7 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
 
     console.log({ channelSections });
 
-    const featuredChannels = channelSections.items.find(
+    const featuredChannels = channelSections.items?.find(
       (section) => section.snippet.type === "multiplechannels"
     );
 
@@ -71,13 +71,14 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
           channelPlaylistTitle: string | undefined;
         }
       | undefined = undefined;
+
     if (featuredChannels) {
       const featuredChannelIds = featuredChannels.contentDetails?.channels;
       if (featuredChannelIds) {
         const channels = await fetchSingleChannelInfo({
           data: featuredChannelIds.join(","),
         });
-        const channelData: FeaturedChannelReturnType[] = channels.items.map(
+        const channelData: FeaturedChannelReturnType[] = channels.items?.map(
           (item) => ({
             subCount: formatYouTubeViewCount(
               Number(item.statistics.subscriberCount)
@@ -127,14 +128,17 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
         description: item.snippet.description,
       }));
 
+      console.log({ channelPlaylistInfo });
+
       // grab the playlist INfo and add the playlistId in the return
       async function getPlayListItemVideos(playlistIds: string) {
         const playlistItemVideoIds = (
           await fetchChannelsUploadedVideosPlaylistItem({
             data: { playlistIds, maxResult: 10 },
           })
-        ).map((item) => item.videoId);
+        )?.map((item) => item.videoId);
 
+        console.log({ playlistItemVideoIds });
         return fetchSingleVideo({
           data: {
             isPlaylist: true,

@@ -7,16 +7,19 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { useTheme } from "next-themes";
 
 export function Header() {
-  // const router = useRouter();
-  // const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const { theme, setTheme } = useTheme();
 
-  // const handleSearch = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (searchQuery.trim()) {
-  //     router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-  //   }
-  // };
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.navigate({
+        to: "/results",
+        search: { search_query: searchQuery },
+      });
+    }
+  };
 
   return (
     <header className=" sticky  top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -45,13 +48,13 @@ export function Header() {
         </div> */}
 
         <div className=" flex justify-center w-[200px] md:w-[250px] lg:w-full  max-w-2xl mx-auto">
-          <form onSubmit={() => {}} className="flex w-full ">
+          <form onSubmit={handleSearch} className="flex w-full ">
             <Input
               type="search"
               placeholder="Search"
               className="rounded-r-none border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Button
               type="submit"

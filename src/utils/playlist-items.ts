@@ -43,8 +43,9 @@ export const fetchChannelsUploadedVideosPlaylistItem = createServerFn({
 })
   .validator((data: { playlistIds: string; maxResult?: number }) => data)
   .handler(async ({ data }) => {
+    console.log({ playlistIdinternalllly: data.playlistIds });
     const videos = await axios
-      .request<ChannelVideosPlayListItemsType>(
+      .request<ChannelVideosPlayListItemsType | null>(
         channelVideosPlaylistOptions(data.playlistIds, data.maxResult)
       )
       .then((r) => r.data)
@@ -53,15 +54,23 @@ export const fetchChannelsUploadedVideosPlaylistItem = createServerFn({
         if (err.response?.status === 429) {
           throw new Error("You have made too many requests");
         }
+        if (err.code === "404") {
+          // throw new Error("You have made too many requests");
+          return null;
+        }
         throw new Error("Failed to fetch Channel Info");
       });
 
-    const videoIds = videos.items.map((vid) => ({
+    console.log({ videoIds222222222222: videos });
+    // @ts-expect-error
+    if (videos.error) {
+      return [];
+    }
+
+    return videos?.items?.map((vid) => ({
       id: vid.id,
       videoId: vid.snippet.resourceId.videoId,
     }));
-
-    return videoIds;
   });
 
 export const fetchChannelsUploadedVideosPlaylistItemOptions = (
