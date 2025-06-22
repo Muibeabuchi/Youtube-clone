@@ -20,6 +20,14 @@ import { z } from "zod";
 import { formatYouTubeViewCount, getYouTubePublishedDate } from "@/lib/utils";
 import { commentsOfVideoOptions } from "@/utils/comments";
 import { CommentSkeleton } from "@/components/loading/comments-loading";
+import { watchPlaylistOptions } from "@/utils/playlist-items";
+import { PlaylistSidebarSkeleton } from "@/components/loading/playlist-sidebar-component";
+import { PlaylistSidebar } from "@/components/playlist-sidebar";
+import {
+  fetchChannelsVideosPlaylistOptions,
+  fetchPlaylistIdVideosOptions,
+  fetchPlaylistsOptions,
+} from "@/utils/playlist";
 
 export const Route = createFileRoute("/watch")({
   validateSearch: z.object({
@@ -37,11 +45,13 @@ export const Route = createFileRoute("/watch")({
   async loader({ context, deps }) {
     const videoId = deps.v;
     const playlistId = deps.list;
+    // prefetch the playlist info if the list search parameter exists
+    context.queryClient.prefetchQuery(
+      fetchPlaylistIdVideosOptions(playlistId ?? "")
+    );
 
     // prefetch the comments for this video
     context.queryClient.prefetchQuery(commentsOfVideoOptions(videoId));
-    // prefetch the playlist info if the list search parameter exists
-    // context.queryClient.prefetchQuery(commentsOfVideoOptions(videoId));
 
     await context.queryClient.ensureQueryData(singleVideoQueryOptions(videoId));
   },
@@ -50,10 +60,14 @@ export const Route = createFileRoute("/watch")({
 });
 
 function RouteComponent() {
-  const { v: videoId } = Route.useSearch();
+  const { v: videoId, list } = Route.useSearch();
   const { data: singleVideo } = useSuspenseQuery(
     singleVideoQueryOptions(videoId)
   );
+  const { data: playlistData } = useSuspenseQuery(
+    fetchPlaylistsOptions(list ?? "")
+  );
+
   const videoItems = singleVideo.items[0];
   const videoChannelImageUrl = singleVideo.channelImageUrl;
   const videoChannelSubCount = singleVideo.channelSubCount;
@@ -64,17 +78,28 @@ function RouteComponent() {
     <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 w-full max-w-[1800px] mx-auto px-3 sm:px-4">
       <div className="flex-1 min-w-0">
         {/* Video Player */}
-        <div className="lg:h-[450px] h-[400px] aspect-video w-full bg-black rounded-lg xl:rounded-xl overflow-hidden">
-          <iframe
-            width="100%"
-            height="100%"
-            src={`https://www.youtube.com/embed/${videoId}`}
-            title={videoItems.snippet.title}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-          {/* <ReactPlayer url={`https://www.youtube.com/embed/${videoId}`} /> */}
+        <div className="lg:h-[450px] h-[400px] aspect-video w-full  rounded-lg xl:rounded-xl overflow-hidden flex items-center">
+          {
+            // <PlaylistSidebarComponent />
+            // <Suspense fallback={<PlaylistSidebarSkeleton />}>
+            //   <PlaylistSidebar
+            //     playlistId={list}
+            //     currentVideoId={videoId}
+            //     // currentVideoId={videoId}
+            //     // onVideoSelect={handleVideoSelect}
+            //   />
+            // </Suspense>
+            // <div className="w-[200px]">Playlist Component</div>
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title={videoItems.snippet.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          }
         </div>
 
         {/* Video Info */}

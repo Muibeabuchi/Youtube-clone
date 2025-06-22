@@ -7,6 +7,8 @@ import { ChannelType } from "@/types/channel/channel-types";
 import { SingleVideoType } from "@/types/video/single-video-types";
 import { SingleChannelTypes } from "@/types/channel/single-channel-types";
 import { ChannelVideosPlayListItemsType } from "@/types/playlistItem/channelVideosPlaylistItem";
+import { fetchSingleVideo } from "./videos";
+import { fetchChannelPlaylists } from "./playlist";
 
 const API_KEY = import.meta.env.VITE_XRAPIDAPIKEY;
 const PARAM_KEY = import.meta.env.VITE_PARAM_KEY;
@@ -67,6 +69,10 @@ export const fetchChannelsUploadedVideosPlaylistItem = createServerFn({
       return [];
     }
 
+    // const playlist = await fetchChannelPlaylists({
+    //   data: data.playlistIds,
+    // });
+
     return videos?.items?.map((vid) => ({
       id: vid.id,
       videoId: vid.snippet.resourceId.videoId,
@@ -79,7 +85,7 @@ export const fetchPlaylistItem = createServerFn({
   .validator((data: { playlistId: string; maxResult?: number }) => data)
   .handler(async ({ data }) => {
     const videos = await axios
-      .request<ChannelVideosPlayListItemsType | null>(
+      .request<ChannelVideosPlayListItemsType>(
         channelVideosPlaylistOptions(data.playlistId, data.maxResult)
       )
       .then((r) => r.data)
@@ -88,10 +94,11 @@ export const fetchPlaylistItem = createServerFn({
         if (err.response?.status === 429) {
           throw new Error("You have made too many requests");
         }
-        if (err.code === "404") {
-          // throw new Error("You have made too many requests");
-          return null;
-        }
+        // ! Review this code
+        // if (err.code === "404") {
+        //   // throw new Error("You have made too many requests");
+        //   return null;
+        // }
         throw new Error("Failed to fetch Channel Info");
       });
 
@@ -100,8 +107,57 @@ export const fetchPlaylistItem = createServerFn({
     // if (videos.error) {
     //   return [];
     // }
-
     return videos;
+    // fetchSingleVideo({data:})
+  });
+
+export const preFetchPlaylistItems = createServerFn({
+  method: "GET",
+})
+  .validator((data: { playlistIds?: string; maxResult?: number }) => data)
+  .handler(async ({ data }) => {
+    console.log({ playlistIdinternalllly: data.playlistIds });
+    // if (!data.playlistIds) return [];
+    const videos = await axios
+      .request<ChannelVideosPlayListItemsType | null>(
+        channelVideosPlaylistOptions(data.playlistIds ?? "", data.maxResult)
+      )
+      .then((r) => r.data)
+      .catch((err: AxiosError) => {
+        console.log({ err });
+        if (err.response?.status === 429) {
+          throw new Error("You have made too many requests");
+        }
+        // if (err.code === "404") {
+        //   // throw new Error("You have made too many requests");
+        //   return null;
+        // }
+        throw new Error("Failed to fetch Channel Info");
+      });
+
+    console.log({ videoIds222222222222: videos });
+    // // @ts-expect-error
+    // if (videos.error) {
+    //   return [];
+    // }
+
+    const playlist = await fetchChannelPlaylists({
+      data: data.playlistIds ?? "",
+    });
+
+    const videoIds = videos?.items
+      ?.map((vid) => vid.snippet.resourceId.videoId)
+      .join(",");
+
+    const videoData = await fetchSingleVideo({
+      data: { videoIds: videoIds ?? "", isPlaylist: true },
+    });
+
+    return {
+      playlist,
+      videoData,
+      // videos: videos?.items?.map((vid) => vid.snippet.resourceId.videoId),
+    };
   });
 
 export const fetchChannelsUploadedVideosPlaylistItemOptions = (
@@ -112,5 +168,15 @@ export const fetchChannelsUploadedVideosPlaylistItemOptions = (
     queryFn: ({ queryKey }) =>
       fetchChannelsUploadedVideosPlaylistItem({
         data: { playlistIds: queryKey[1] },
+      }),
+  });
+
+export const watchPlaylistOptions = (playlistId?: string) =>
+  queryOptions({
+    enabled: !!playlistId,
+    queryKey: ["watch-playlist", playlistId],
+    queryFn: ({ queryKey }) =>
+      preFetchPlaylistItems({
+        data: { playlistIds: queryKey[1], maxResult: 10 },
       }),
   });

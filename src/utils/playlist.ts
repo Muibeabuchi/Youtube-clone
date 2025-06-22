@@ -40,7 +40,7 @@ const playlistIdsOptions = (id: string) => ({
   url: `${BASE_URL}/playlists`,
   params: {
     ...options.params,
-    part: "contentDetails,snippet,status,id,localizations",
+    part: "contentDetails,snippet,status,id,localizations,player",
     id,
   },
 });
@@ -118,4 +118,9 @@ export const fetchPlaylistIdVideosOptions = (ids: string) =>
     queryKey: ["playlists-ids", ids],
     queryFn: ({ queryKey }) =>
       fetchChannelPlaylistAndPlayListFirstItem({ data: queryKey[1] }),
+  });
+export const fetchPlaylistsOptions = (ids: string) =>
+  queryOptions({
+    queryKey: ["playlists-video-player", ids],
+    queryFn: ({ queryKey }) => fetchPlaylistsById({ data: queryKey[1] }),
   });
