@@ -15,6 +15,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { useRef } from "react";
+import ChannelPageLoadingSkeleton from "@/components/loading/channel-page-skeleton";
 
 export const Route = createFileRoute("/channel/$channelId/")({
   loader: async ({ context, params }) => {
@@ -42,6 +43,7 @@ export const Route = createFileRoute("/channel/$channelId/")({
 
     console.log({ channelSectionInfo });
   },
+  pendingComponent: ChannelPageLoadingSkeleton,
   component: RouteComponent,
 });
 
