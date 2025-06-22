@@ -142,7 +142,7 @@ export const fetchChannelSections = createServerFn({ method: "GET" })
         return fetchSingleVideo({
           data: {
             isPlaylist: true,
-            videoIds: playlistItemVideoIds.join(","),
+            videoIds: playlistItemVideoIds?.join(",") ?? "",
           },
         });
       }
